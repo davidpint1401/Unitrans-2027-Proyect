@@ -29,6 +29,22 @@ jobs:
         with:
           node-version: 20
 
+      # bcv.org.ve no envía el certificado intermedio de su cadena TLS. Se descarga desde la
+      # dirección "CA Issuers" de su propio certificado para que la conexión siga verificada.
+      # Si algo falla, el script usa la tasa oficial publicada por ve.dolarapi.com.
+      - name: Completar la cadena de certificados del BCV
+        continue-on-error: true
+        run: |
+          echo | openssl s_client -connect www.bcv.org.ve:443 -servername www.bcv.org.ve 2>/dev/null \
+            | openssl x509 -out "$RUNNER_TEMP/bcv-hoja.pem"
+          url=$(openssl x509 -in "$RUNNER_TEMP/bcv-hoja.pem" -noout -ext authorityInfoAccess \
+            | sed -n 's/.*CA Issuers - URI:\(.*\)/\1/p' | head -n1)
+          echo "Intermedio: $url"
+          curl -fsSL "$url" -o "$RUNNER_TEMP/bcv-intermedio.cer"
+          openssl x509 -inform DER -in "$RUNNER_TEMP/bcv-intermedio.cer" -out "$RUNNER_TEMP/bcv-intermedio.pem" \
+            || openssl x509 -in "$RUNNER_TEMP/bcv-intermedio.cer" -out "$RUNNER_TEMP/bcv-intermedio.pem"
+          echo "NODE_EXTRA_CA_CERTS=$RUNNER_TEMP/bcv-intermedio.pem" >> "$GITHUB_ENV"
+
       - name: Consultar tasa BCV y precios de farmacias
         run: node scripts/actualizar-precios.mjs
 
