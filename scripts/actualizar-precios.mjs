@@ -4,6 +4,9 @@
  *  - la tasa oficial del BCV (USD y EUR), y
  *  - el precio de cada hormona en la web de cada farmacia (data/fuentes.json).
  *
+ * Lee el precio del JSON-LD / metadatos de cada página (Farmatodo, Suplementos Venezuela),
+ * de la API de VTEX (Locatel) o del JSON de PrestaShop (Badan).
+ *
  * Se ejecuta desde GitHub Actions (.github/workflows/precios.yml). Sin dependencias: Node 20+.
  * Si una fuente falla o devuelve un valor absurdo, se conserva el último dato verificado.
  *
@@ -16,16 +19,24 @@ const FUENTES = new URL('../data/fuentes.json', import.meta.url);
 const SALIDA = new URL('../data/precios.json', import.meta.url);
 
 const HEADERS = {
-  'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0 Safari/537.36',
-  'Accept-Language': 'es-VE,es;q=0.9',
+  'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/128.0.0.0 Safari/537.36',
+  'Accept-Language': 'es-VE,es-419;q=0.9,es;q=0.8,en;q=0.7',
+  'Cache-Control': 'no-cache',
+  'Sec-Fetch-Dest': 'document',
+  'Sec-Fetch-Mode': 'navigate',
+  'Sec-Fetch-Site': 'none',
+  'Upgrade-Insecure-Requests': '1',
 };
+
+/** Mensaje de error con su causa (fetch solo dice "fetch failed") */
+const motivo = (err) => [err.message, err.cause?.code, err.cause?.message].filter(Boolean).join(' · ');
 
 // Una lectura se acepta solo si, en USD, queda dentro de este factor del precio de referencia.
 const MARGEN = 4;
 
 async function get(url, { json = false } = {}) {
   const res = await fetch(url, {
-    headers: { ...HEADERS, Accept: json ? 'application/json' : 'text/html,application/xhtml+xml' },
+    headers: { ...HEADERS, Accept: json ? 'application/json' : 'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' },
     signal: AbortSignal.timeout(25000),
     redirect: 'follow',
   });
@@ -92,7 +103,7 @@ async function obtenerTasa(anterior) {
       console.log(`Tasa: ${t.usd} Bs/USD · ${t.eur ?? '-'} Bs/EUR (${t.fuente})`);
       return { ...t, verificado: new Date().toISOString(), estado: 'ok' };
     } catch (err) {
-      console.warn(`Tasa: ${fuente.name} falló: ${err.message}`);
+      console.warn(`Tasa: ${fuente.name} falló: ${motivo(err)}`);
     }
   }
   console.warn('Tasa: se conserva la anterior');
@@ -147,15 +158,6 @@ function desdePrestaShop(html) {
   return [{ valor: parseFloat(precio[1]), moneda: normalizarMoneda(iso && iso[1]), via: 'prestashop' }];
 }
 
-async function desdeShopify(url) {
-  // Suplementos Venezuela (Shopify): /products/<handle>.js devuelve el precio en centavos
-  const limpio = url.split('?')[0].replace(/\/$/, '');
-  const p = await get(`${limpio}.js`, { json: true });
-  const v = p.variants?.find((x) => x.available) ?? p.variants?.[0];
-  const cents = v?.price ?? p.price;
-  return cents != null ? [{ valor: cents / 100, moneda: null, via: 'shopify' }] : [];
-}
-
 async function desdeVtex(url) {
   // Locatel (VTEX): API pública del catálogo
   const m = url.match(/^(https:\/\/[^/]+)\/(.+)\/p\/?$/);
@@ -170,16 +172,15 @@ async function candidatos(url) {
   const out = [];
   const host = new URL(url).hostname;
   try {
-    if (host.includes('suplementosvenezuela')) out.push(...await desdeShopify(url));
     if (host.includes('locatel')) out.push(...await desdeVtex(url));
   } catch (err) {
-    console.warn(`    API de la tienda falló: ${err.message}`);
+    console.warn(`    API de la tienda falló: ${motivo(err)}`);
   }
   try {
     const html = await get(url);
     out.push(...desdeJsonLd(html), ...desdeMeta(html), ...desdePrestaShop(html));
   } catch (err) {
-    console.warn(`    página falló: ${err.message}`);
+    console.warn(`    página falló: ${motivo(err)}`);
   }
   return out.filter((c) => c.valor > 0 && Number.isFinite(c.valor));
 }
