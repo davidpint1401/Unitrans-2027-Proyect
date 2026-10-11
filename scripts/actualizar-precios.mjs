@@ -53,7 +53,8 @@ export function parseNumero(texto) {
   if (coma > -1 && punto > -1) {
     s = coma > punto ? s.replace(/\./g, '').replace(',', '.') : s.replace(/,/g, '');
   } else if (coma > -1) {
-    s = /,\d{1,2}$/.test(s) ? s.replace(/\./g, '').replace(',', '.') : s.replace(/,/g, '');
+    // "1,234" y "1,234,567" son miles; "83,47" o "875,65050000" (formato BCV) son decimales
+    s = /^\d{1,3}(,\d{3})+$/.test(s) ? s.replace(/,/g, '') : s.replace(',', '.');
   } else if (/^\d{1,3}(\.\d{3})+$/.test(s)) {
     s = s.replace(/\./g, '');
   }
@@ -73,13 +74,18 @@ function normalizarMoneda(c) {
 
 async function tasaDesdeBCV() {
   const html = await get('https://www.bcv.org.ve/');
+  // Bloque: <div id="dolar"> … <span> USD</span> … <strong> 875,65050000 </strong>
   const valor = (id) => {
-    const m = html.match(new RegExp(`id="${id}"[\\s\\S]*?<strong>\\s*([\\d.,]+)\\s*</strong>`));
+    const m = html.match(new RegExp(`id=["']${id}["'][\\s\\S]{0,2000}?<strong[^>]*>\\s*([\\d.,]+)\\s*</strong>`, 'i'));
     return m ? parseNumero(m[1]) : NaN;
   };
   const usd = valor('dolar'), eur = valor('euro');
-  const fecha = (html.match(/date-display-single"[^>]*content="([^"]+)"/) || [])[1] || null;
-  if (!(usd > 0)) throw new Error('no se encontró la tasa del dólar');
+  const fecha = (html.match(/date-display-single["'][^>]*content=["']([^"']+)["']/i) || [])[1] || null;
+  if (!(usd > 0)) {
+    const i = html.search(/dolar|USD/i);
+    const muestra = (i > -1 ? html.slice(Math.max(0, i - 200), i + 400) : html.slice(0, 400)).replace(/\s+/g, ' ');
+    throw new Error(`no se encontró la tasa del dólar (${html.length} bytes). Fragmento: ${muestra}`);
+  }
   return { usd, eur: eur > 0 ? eur : null, fecha_valor: fecha, fuente: 'bcv.org.ve' };
 }
 
