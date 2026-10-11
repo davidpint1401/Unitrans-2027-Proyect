@@ -12,7 +12,7 @@ Es un sitio minimalista, responsive y accesible, con solo 3 páginas, hecho con 
 
 El diseño parte del **manual de marca Unitrans**. Es cálido, cercano y humano, con mucho espacio en blanco, bordes redondeados (16–28 px), sombras sutiles e íconos de trazo redondeado.
 
-- **Logo:** se construye con texto y SVG inline, sin imágenes. Lleva el corazón naranja con la figura humana y la palabra *Unitrans* con los colores de la bandera trans, como en el manual (T celeste · r rosa · a negro · n rosa · s celeste). En el footer va en versión compacta sobre fondo oscuro.
+- **Logo:** se usa el archivo oficial (`assets/`), con el corazón naranja y la palabra *Unitrans* en los colores de la bandera trans. En el footer va la versión con letras blancas sobre fondo oscuro.
 - **Tono:** cálido y sin tecnicismos. Concepto: *"Tu camino, acompañado"*.
 
 ### Paleta de colores
@@ -54,7 +54,10 @@ El diseño parte del **manual de marca Unitrans**. Es cálido, cercano y humano,
 ├── acompanamiento.html   # Asesoría, servicios, ruta, especialistas, terapia hormonal, laboratorios, cirugía, FAQ y alianzas
 ├── contacto.html         # Historia clínica, canales, voluntariado y recursos
 ├── styles.css            # Variables, reset, componentes y media queries
-├── main.js               # Menú hamburguesa y acordeones FAQ
+├── main.js               # Menú hamburguesa, acordeones FAQ y respaldo de imágenes
+├── assets/
+│   ├── logo-unitrans.png         # Logo oficial a color (header)
+│   └── logo-unitrans-blanco.png  # Logo para fondos oscuros (footer)
 ├── .gitignore
 ├── LICENSE
 └── README.md
@@ -119,6 +122,10 @@ Datos que siguen **por confirmar**:
 - [ ] URL oficial de Instagram (por ahora se enlaza `instagram.com/fundacionunitrans`) y enlaces de Facebook y TikTok.
 - [ ] Condiciones de atención para menores de 18 años.
 - [ ] Guías completas de la sección Recursos.
+
+### Imágenes externas
+
+Las fotos de especialistas, los productos hormonales y los logos de aliados se cargan desde el servidor de imágenes de los correos informativos (`woooth.stripocdn.email`). Si alguna no carga, `main.js` la retira y deja visibles las iniciales o el nombre en texto, así que el diseño no se rompe. Lo recomendable es copiar esos archivos a `assets/` y reemplazar en los HTML la dirección `https://woooth.stripocdn.email/.../images/` por `assets/`, para no depender de ese servidor.
 
 Para actualizar precios o especialistas basta con editar el texto en `acompanamiento.html` (sección `#especialistas` y `#hormonas`).
 

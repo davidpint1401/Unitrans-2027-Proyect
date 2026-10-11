@@ -227,23 +227,11 @@ p + p { margin-top: 0.9em; }
   min-height: var(--header-h);
 }
 
-/* Logo textual */
-.logo {
-  display: inline-flex;
-  align-items: center;
-  gap: 10px;
-  text-decoration: none;
-  color: var(--logo-black);
-}
-.logo__mark { width: 40px; height: 40px; flex-shrink: 0; }
-.logo__text { display: flex; flex-direction: column; line-height: 1; font-family: var(--font-title); }
-.logo__eyebrow { font-size: 0.8rem; font-weight: 700; letter-spacing: 0.06em; color: var(--logo-black); }
-.logo__name { font-size: 1.55rem; font-weight: 700; letter-spacing: -0.01em; color: var(--logo-black); }
-.logo__name .c-sky { color: var(--logo-sky); }
-.logo__name .c-pink { color: var(--logo-pink); }
-
-.logo--compact .logo__mark { width: 34px; height: 34px; }
-.logo--compact .logo__name { font-size: 1.3rem; }
+/* Logo oficial */
+.logo { display: inline-flex; align-items: center; border-radius: 10px; }
+.logo img { width: auto; height: 46px; }
+@media (min-width: 900px) { .logo img { height: 52px; } }
+.logo--compact img { height: 56px; }
 
 /* Menú */
 .nav-toggle {
@@ -585,12 +573,37 @@ a.card:hover { transform: translateY(-3px); box-shadow: var(--shadow); }
 .subnav a:hover { background: var(--bg-soft); border-color: var(--brand-blue); }
 
 /* Directorio de especialistas */
-.profile__initials {
+.avatar {
+  position: relative;
   display: flex; align-items: center; justify-content: center;
-  width: 64px; height: 64px;
-  font-family: var(--font-title); font-size: 1.3rem; font-weight: 700;
-  color: #fff; border-radius: 50%;
+  width: 72px; height: 72px;
+  flex-shrink: 0;
+  overflow: hidden;
+  border-radius: 50%;
+  box-shadow: 0 0 0 4px #fff, 0 0 0 5px var(--border);
 }
+.avatar__initials { font-family: var(--font-title); font-size: 1.35rem; font-weight: 700; color: #fff; }
+.avatar img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; background: #fff; }
+.advisory__profile .avatar { width: 96px; height: 96px; }
+.advisory__person { display: flex; align-items: center; gap: 14px; margin-bottom: 8px; }
+.advisory__person strong { font-family: var(--font-title); font-size: 1.1rem; }
+
+/* Logos de aliados */
+.partner__logo { max-width: 100%; max-height: 56px; width: auto; object-fit: contain; }
+.logo-strip { display: flex; align-items: center; gap: 16px; min-height: 48px; }
+.logo-strip img { max-height: 48px; max-width: 120px; width: auto; object-fit: contain; }
+
+/* Producto en tablas de precios */
+.product { display: flex; align-items: center; gap: 12px; }
+.product img {
+  width: 56px; height: 56px;
+  flex-shrink: 0;
+  object-fit: contain;
+  background: #fff;
+  border: 1px solid var(--border);
+  border-radius: 14px;
+}
+
 .profile__note {
   display: flex; gap: 8px;
   padding: 10px 12px;
@@ -639,9 +652,6 @@ a.card:hover { transform: translateY(-3px); box-shadow: var(--shadow); }
 }
 .site-footer a { color: #fff; }
 .footer__grid { display: grid; gap: 36px; }
-.site-footer .logo,
-.site-footer .logo__eyebrow,
-.site-footer .logo__name { color: #fff; }
 .footer__tagline { margin-top: 14px; max-width: 36ch; color: #CFCBDB; }
 .footer__title {
   margin-bottom: 14px;

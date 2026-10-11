@@ -48,6 +48,26 @@
     });
   });
 
+  /* ---------- Imágenes externas con respaldo ---------- */
+  // remove: quita la imagen y deja ver lo que hay debajo (iniciales, nombre)
+  // text:   cambia la imagen por su texto alternativo
+  var fallback = function (img) {
+    if (img.getAttribute('data-fallback') === 'text') {
+      var span = document.createElement('span');
+      span.className = 'partner__name';
+      span.textContent = img.alt;
+      img.replaceWith(span);
+    } else {
+      var strip = img.closest('.logo-strip');
+      img.remove();
+      if (strip && !strip.querySelector('img')) strip.remove();
+    }
+  };
+  document.querySelectorAll('img[data-fallback]').forEach(function (img) {
+    if (img.complete && img.naturalWidth === 0) fallback(img);
+    else img.addEventListener('error', function () { fallback(img); });
+  });
+
   /* ---------- Año actual en el footer ---------- */
   document.querySelectorAll('[data-year]').forEach(function (el) {
     el.textContent = new Date().getFullYear();
