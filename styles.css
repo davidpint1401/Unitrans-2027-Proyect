@@ -205,15 +205,6 @@ p + p { margin-top: 0.9em; }
 
 .btn-block { width: 100%; }
 
-.btn[aria-disabled="true"] {
-  background: #EFEDF3;
-  color: var(--text-muted);
-  border-color: transparent;
-  box-shadow: none;
-  cursor: not-allowed;
-  transform: none;
-}
-
 /* Variantes sobre fondo azul */
 .section--blue .btn-primary,
 .cta--blue .btn-primary { background: #fff; color: var(--brand-blue-dark); }
@@ -387,10 +378,10 @@ a.card:hover { transform: translateY(-3px); box-shadow: var(--shadow); }
   border-radius: var(--radius-sm);
   font-size: 0.9375rem;
 }
-.service-meta div { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 4px 12px; }
+.service-meta { width: 100%; }
+.service-meta div { display: grid; gap: 2px; }
 .service-meta dt { font-weight: 600; color: var(--text); }
 .service-meta dd { margin: 0; color: var(--text-muted); }
-.card .channel-note { font-size: 0.875rem; }
 
 /* ---------- 9. Split / Quiénes somos ---------- */
 .split { display: grid; gap: 32px; align-items: center; }
@@ -516,17 +507,8 @@ a.card:hover { transform: translateY(-3px); box-shadow: var(--shadow); }
 
 /* ---------- 15. Equipo ---------- */
 .profile { align-items: flex-start; }
-.profile__avatar { width: 88px; height: 88px; border-radius: 50%; overflow: hidden; margin-bottom: 6px; }
-.profile__label {
-  font-size: 0.8125rem;
-  font-weight: 600;
-  text-transform: uppercase;
-  letter-spacing: 0.06em;
-  color: var(--text-muted);
-}
 .profile__role { font-weight: 600; color: var(--brand-blue-dark) !important; }
 .profile__bio { font-style: italic; }
-.profile__disclaimer { margin-top: auto; padding-top: 8px; font-size: 0.8125rem; border-top: 1px dashed var(--border); width: 100%; }
 
 /* ---------- 16. Historia clínica / contacto ---------- */
 .feature-box {
@@ -563,20 +545,80 @@ a.card:hover { transform: translateY(-3px); box-shadow: var(--shadow); }
   word-break: break-all;
 }
 
-.status {
-  display: inline-flex;
-  align-items: center;
-  gap: 6px;
-  font-size: 0.8125rem;
-  font-weight: 600;
-  color: #6A5F12;
+/* ---------- 16b. Asesoría personalizada ---------- */
+.advisory { display: grid; gap: 28px; align-items: start; }
+.advisory h4 { margin-top: 8px; font-size: 1.05rem; }
+.advisory__steps-title { margin-bottom: 18px; font-size: 1.35rem; }
+
+.checklist { display: grid; gap: 12px; list-style: none; padding: 0; }
+.checklist li { display: flex; gap: 10px; color: var(--text); }
+.checklist svg { width: 20px; height: 20px; flex-shrink: 0; margin-top: 3px; color: var(--brand-green); }
+
+.steps { display: grid; gap: 14px; list-style: none; padding: 0; }
+.steps li { display: grid; grid-template-columns: 40px 1fr; gap: 14px; align-items: start; }
+.steps strong { display: block; font-family: var(--font-title); color: var(--text); line-height: 1.35; }
+.steps p { margin-top: 4px; color: var(--text-muted); }
+.steps__num {
+  display: flex; align-items: center; justify-content: center;
+  width: 40px; height: 40px;
+  font-family: var(--font-title); font-weight: 700;
+  color: #fff; background: var(--brand-blue); border-radius: 50%;
 }
-.status::before {
-  content: "";
-  width: 8px; height: 8px;
-  border-radius: 50%;
-  background: var(--brand-mustard);
+.steps--compact li { grid-template-columns: 32px 1fr; gap: 10px; }
+.steps--compact .steps__num { width: 32px; height: 32px; font-size: 0.9rem; }
+
+/* Subnavegación interna */
+.subnav { margin-top: 28px; }
+.subnav ul { display: flex; flex-wrap: wrap; gap: 8px; list-style: none; padding: 0; }
+.subnav a {
+  display: inline-block;
+  padding: 8px 16px;
+  font-family: var(--font-title);
+  font-size: 0.9375rem;
+  font-weight: 700;
+  color: var(--brand-blue-dark);
+  text-decoration: none;
+  background: #fff;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-pill);
 }
+.subnav a:hover { background: var(--bg-soft); border-color: var(--brand-blue); }
+
+/* Directorio de especialistas */
+.profile__initials {
+  display: flex; align-items: center; justify-content: center;
+  width: 64px; height: 64px;
+  font-family: var(--font-title); font-size: 1.3rem; font-weight: 700;
+  color: #fff; border-radius: 50%;
+}
+.profile__note {
+  display: flex; gap: 8px;
+  padding: 10px 12px;
+  font-size: 0.9375rem;
+  color: var(--text) !important;
+  background: #FFF8E6;
+  border-radius: 12px;
+}
+.profile__note svg { width: 18px; height: 18px; flex-shrink: 0; margin-top: 3px; color: #6A5F12; }
+.profile__contacts { display: flex; flex-direction: column; gap: 8px; margin-top: auto; width: 100%; }
+.card .profile__contacts .btn { margin-top: 0; align-self: stretch; font-size: 0.9375rem; }
+
+/* Terapia hormonal */
+.hrt { display: grid; gap: 20px; }
+.hrt__col { gap: 16px; }
+.price-table { width: 100%; border-collapse: collapse; font-size: 0.9375rem; }
+.price-table caption {
+  padding-bottom: 8px;
+  font-family: var(--font-title);
+  font-weight: 700;
+  text-align: left;
+  color: var(--text);
+}
+.price-table th, .price-table td { padding: 9px 12px; text-align: left; border-bottom: 1px solid var(--border); }
+.price-table thead th { font-size: 0.8125rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.04em; color: var(--text-muted); background: var(--bg-soft); }
+.price-table tbody th { font-weight: 500; color: var(--text); }
+.price-table td { font-weight: 600; text-align: right; white-space: nowrap; color: var(--text); }
+.price-table thead th:last-child { text-align: right; }
 
 /* ---------- 17. CTA final ---------- */
 .cta {
@@ -688,4 +730,6 @@ a.card:hover { transform: translateY(-3px); box-shadow: var(--shadow); }
   .timeline--full { max-width: 860px; }
   .partners { grid-template-columns: repeat(6, 1fr); }
   .feature-box { grid-template-columns: 1.3fr 1fr; align-items: center; padding: 56px; }
+  .advisory { grid-template-columns: 1fr 1fr; gap: 48px; }
+  .hrt { grid-template-columns: 1fr 1fr; }
 }

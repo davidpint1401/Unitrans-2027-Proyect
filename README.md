@@ -51,7 +51,7 @@ El diseño parte del **manual de marca Unitrans**. Es cálido, cercano y humano,
 ```
 .
 ├── index.html            # Inicio
-├── acompanamiento.html   # Servicios, ruta, equipo, FAQ y alianzas
+├── acompanamiento.html   # Asesoría, servicios, ruta, especialistas, terapia hormonal, laboratorios, cirugía, FAQ y alianzas
 ├── contacto.html         # Historia clínica, canales, voluntariado y recursos
 ├── styles.css            # Variables, reset, componentes y media queries
 ├── main.js               # Menú hamburguesa y acordeones FAQ
@@ -105,19 +105,22 @@ En **Settings → Pages**, elige *Deploy from a branch*, la rama `main` y la car
 
 ---
 
-## Datos pendientes por confirmar
+## Contenido y datos pendientes
 
-El sitio **no inventa datos**. Todo lo que falta aparece marcado como *"por confirmar"*:
+Los horarios, costos, contactos de especialistas y precios de hormonas salen de los **correos informativos de la Fundación**. Son precios de referencia y pueden cambiar; las actualizaciones se anuncian en el [canal de WhatsApp](https://www.whatsapp.com/channel/0029VaaUsczL2ATzuoNGJz2H).
 
-- [ ] Nombres, fotos y bios reales de las personas especialistas (hoy son "Perfil de ejemplo / Nombre por confirmar").
-- [ ] Modalidad, costos y canal de contacto de cada servicio.
-- [ ] Alcance del servicio de Rehabilitación.
-- [ ] URL oficial de Instagram (por ahora se enlaza `instagram.com/fundacionunitrans`).
-- [ ] Enlaces de Telegram y WhatsApp (los botones están deshabilitados).
-- [ ] Tipo de vínculo y beneficios de cada alianza (PLAFAM, VIHvos, CEBLAB, ELVILAB, Laboratorio Clínico Corona, Farmacias), además de sus logos oficiales.
-- [ ] Proceso de voluntariado (hoy el botón abre un correo a la Fundación).
+Datos que siguen **por confirmar**:
+
+- [ ] Enlaces de Google Maps de cada especialista y laboratorio.
+- [ ] Especialidad del Dr. Juan Blanco.
+- [ ] Horario de la consulta pública del Dr. Freddy Salazar (aparece como "viernes de 8 am a 9 pm").
+- [ ] Ortografía del apellido "Rossamando" (en un correo aparece como "Rossamodo").
+- [ ] URLs de la web de VIHvos y de PLAFAM (pestañas Combos, Anticonceptivos y Laboratorio).
+- [ ] URL oficial de Instagram (por ahora se enlaza `instagram.com/fundacionunitrans`) y enlaces de Facebook y TikTok.
 - [ ] Condiciones de atención para menores de 18 años.
-- [ ] Guías completas de la sección Recursos ("Protocolo por confirmar").
+- [ ] Guías completas de la sección Recursos.
+
+Para actualizar precios o especialistas basta con editar el texto en `acompanamiento.html` (sección `#especialistas` y `#hormonas`).
 
 ---
 
@@ -128,4 +131,4 @@ El código de este repositorio se publica bajo **CC0 1.0 Universal** (ver [`LICE
 ## Créditos
 
 © 2025 **Fundación Unitrans**. Organización sin fines de lucro · Venezuela
-Instagram: [@FundacionUnitrans](https://www.instagram.com/fundacionunitrans/) · Correo: [fundaunitrans2020@gmail.com](mailto:fundaunitrans2020@gmail.com)
+Instagram: [@FundacionUnitrans](https://www.instagram.com/fundacionunitrans/) · Telegram: [t.me/FundacionUnitransOf](https://t.me/FundacionUnitransOf) · Correo: [fundaunitrans2020@gmail.com](mailto:fundaunitrans2020@gmail.com)

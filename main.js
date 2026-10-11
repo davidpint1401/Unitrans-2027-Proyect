@@ -48,11 +48,6 @@
     });
   });
 
-  /* ---------- Enlaces de canales aún no disponibles ---------- */
-  document.querySelectorAll('[aria-disabled="true"]').forEach(function (el) {
-    el.addEventListener('click', function (e) { e.preventDefault(); });
-  });
-
   /* ---------- Año actual en el footer ---------- */
   document.querySelectorAll('[data-year]').forEach(function (el) {
     el.textContent = new Date().getFullYear();
