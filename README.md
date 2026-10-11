@@ -125,6 +125,7 @@ La sección **Terapia hormonal** muestra cada precio en dólares y en bolívares
 2. El script consulta la tasa oficial (USD y EUR) y su fecha valor directamente en [bcv.org.ve](https://www.bcv.org.ve/). El BCV no tiene una API pública, así que se lee de su página. Como su servidor no envía completa la cadena de certificados, el workflow descarga el certificado intermedio que falta desde la dirección indicada en su propio certificado, y la conexión sigue verificada. Si el BCV no responde, se usa la tasa oficial publicada por `ve.dolarapi.com`.
 3. Visita la página de cada producto listada en `data/fuentes.json` (Farmatodo, Badan, Locatel y Suplementos Venezuela) y lee el precio y la moneda en que está publicado (Bs, USD o EUR).
 4. Convierte el precio: si la tienda lo publica en Bs, calcula el equivalente en USD con la tasa BCV; si lo publica en USD, calcula los Bs. En la web, el monto convertido se marca con "≈".
+   - **Suplementos Venezuela publica en euros.** En `data/fuentes.json` tiene `"moneda": "EUR"`, así que su precio se muestra en € y se convierte a Bs con la **tasa euro del BCV**. Su página indica USD en los metadatos, pero esa moneda fija tiene prioridad. Cualquier otra tienda que cobre en euros se configura igual.
 5. Guarda todo en `data/precios.json` y lo sube al repositorio. Netlify o Vercel vuelven a publicar el sitio solos.
 
 **Protecciones**

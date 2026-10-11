@@ -97,8 +97,9 @@
           var p = data.productos && data.productos[partes[0]] && data.productos[partes[0]][partes[1]];
           if (!p || !(p.usd > 0)) return;
 
+          // Precio principal en la moneda en que lo publica la tienda (€ en Suplementos Venezuela)
           var usd = td.querySelector('.price-usd');
-          usd.textContent = '$' + num(p.usd);
+          usd.textContent = p.moneda_origen === 'EUR' ? '€' + num(p.precio_origen) : '$' + num(p.usd);
 
           var bs = td.querySelector('.price-bs');
           if (!bs) {
@@ -108,7 +109,8 @@
           }
           // "≈" cuando el monto es una conversión y no el precio publicado por la tienda
           if (p.bs > 0) {
-            bs.textContent = (p.moneda_origen === 'VES' ? '' : '≈ ') + 'Bs ' + num(p.bs);
+            bs.textContent = (p.moneda_origen === 'VES' ? '' : '≈ ') + 'Bs ' + num(p.bs) +
+              (p.moneda_origen === 'EUR' ? ' (tasa €)' : '');
             if (p.moneda_origen === 'VES') usd.textContent = '≈ $' + num(p.usd);
           } else {
             bs.textContent = '';

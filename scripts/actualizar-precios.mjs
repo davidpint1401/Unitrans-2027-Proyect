@@ -195,17 +195,27 @@ async function candidatos(url) {
  * Convierte una lectura a USD y Bs. Si la tienda no indica la moneda, se elige la
  * interpretación (Bs o USD) más cercana al precio de referencia.
  */
-function interpretar(c, ref, tasa) {
+function interpretar(c, ref, tasa, monedaTienda = null) {
   const opciones = [];
   const add = (moneda) => {
-    if (moneda === 'USD') opciones.push({ moneda, usd: c.valor, bs: tasa ? c.valor * tasa.usd : null });
-    if (moneda === 'VES' && tasa) opciones.push({ moneda, usd: c.valor / tasa.usd, bs: c.valor });
-    if (moneda === 'EUR' && tasa?.eur) opciones.push({ moneda, usd: (c.valor * tasa.eur) / tasa.usd, bs: c.valor * tasa.eur });
+    const o = convertir(c.valor, moneda, tasa);
+    if (o) opciones.push(o);
   };
-  if (c.moneda) add(c.moneda); else { add('USD'); add('VES'); }
+  // Si la tienda tiene moneda fija en fuentes.json (p. ej. EUR), manda sobre lo que diga la página
+  const moneda = monedaTienda ?? c.moneda;
+  if (moneda) add(moneda); else { add('USD'); add('VES'); }
   const validas = opciones.filter((o) => o.usd >= ref / MARGEN && o.usd <= ref * MARGEN);
   validas.sort((a, b) => Math.abs(Math.log(a.usd / ref)) - Math.abs(Math.log(b.usd / ref)));
   return validas[0] ?? null;
+}
+
+/** Monto en su moneda → { moneda, precio, usd, bs } con la tasa BCV (USD o EUR según corresponda) */
+function convertir(valor, moneda, tasa) {
+  if (moneda === 'USD') return { moneda, precio: valor, usd: valor, bs: tasa ? valor * tasa.usd : null };
+  if (moneda === 'VES' && tasa) return { moneda, precio: valor, usd: valor / tasa.usd, bs: valor };
+  if (moneda === 'EUR' && tasa?.eur) return { moneda, precio: valor, usd: (valor * tasa.eur) / tasa.usd, bs: valor * tasa.eur };
+  if (moneda === 'EUR') return { moneda, precio: valor, usd: null, bs: null };
+  return null;
 }
 
 /* ------------------------------------------------------------------ Principal */
@@ -225,47 +235,52 @@ async function main() {
     productos[prod.id] = {};
     for (const t of prod.tiendas) {
       const previo = anterior.productos?.[prod.id]?.[t.id];
-      const base = { url: t.url, referencia_usd: t.referencia_usd };
+      // Precio de referencia (correos) en la moneda de la tienda: USD por defecto, EUR en Suplementos Venezuela
+      const monedaRef = t.moneda ?? 'USD';
+      const valorRef = t.referencia ?? t.referencia_usd;
+      const ref = convertir(valorRef, monedaRef, tasa);
+      const refUsd = ref?.usd ?? valorRef;
+      const base = { url: t.url, referencia: valorRef, moneda_referencia: monedaRef };
+      const fila = (r, extra) => ({
+        ...base,
+        precio_origen: redondear(r.precio),
+        moneda_origen: r.moneda,
+        usd: redondear(r.usd),
+        bs: redondear(r.bs),
+        ...extra,
+      });
 
       if (!t.url) {
         // Sin página de origen: precio de referencia de los correos, convertido a Bs con la tasa del día
-        productos[prod.id][t.id] = {
-          ...base, usd: t.referencia_usd, bs: tasa ? redondear(t.referencia_usd * tasa.usd) : null,
-          moneda_origen: 'USD', origen: 'referencia', estado: 'referencia', verificado: null,
-        };
+        productos[prod.id][t.id] = fila(ref, { origen: 'referencia', estado: 'referencia', verificado: null });
         continue;
       }
 
-      console.log(`${prod.id} · ${t.id}`);
+      console.log(`${prod.id} · ${t.id}${t.moneda ? ` (moneda fija: ${t.moneda})` : ''}`);
       const lecturas = await candidatos(t.url);
       let elegido = null;
       for (const c of lecturas) {
-        const r = interpretar(c, t.referencia_usd, tasa);
-        console.log(`    ${c.via}: ${c.valor} ${c.moneda ?? '(moneda sin indicar)'} → ${r ? `$${r.usd.toFixed(2)} (${r.moneda})` : 'descartado'}`);
+        const r = interpretar(c, refUsd, tasa, t.moneda ?? null);
+        console.log(`    ${c.via}: ${c.valor} ${c.moneda ?? '(moneda sin indicar)'} → ${r ? `${r.precio} ${r.moneda} = $${r.usd.toFixed(2)} = Bs ${r.bs?.toFixed(2)}` : 'descartado'}`);
         if (r && !elegido) elegido = { ...r, via: c.via };
       }
 
       if (elegido) {
         ok++;
-        productos[prod.id][t.id] = {
-          ...base,
-          usd: redondear(elegido.usd),
-          bs: redondear(elegido.bs),
-          moneda_origen: elegido.moneda,
-          origen: elegido.via,
-          estado: 'ok',
-          verificado: new Date().toISOString(),
-        };
+        productos[prod.id][t.id] = fila(elegido, { origen: elegido.via, estado: 'ok', verificado: new Date().toISOString() });
       } else {
         fallos++;
         console.warn('    sin lectura válida: se conserva el último dato');
-        productos[prod.id][t.id] = previo
-          ? { ...previo, ...base, estado: previo.verificado ? 'desactualizado' : 'referencia' }
-          : { ...base, usd: t.referencia_usd, bs: null, moneda_origen: 'USD', origen: 'referencia', estado: 'referencia', verificado: null };
-        // Si el dato viejo estaba en USD, recalcula los Bs con la tasa nueva
-        const p = productos[prod.id][t.id];
-        if (p.moneda_origen === 'USD' && tasa) p.bs = redondear(p.usd * tasa.usd);
-        if (p.moneda_origen === 'VES' && tasa && p.bs) p.usd = redondear(p.bs / tasa.usd);
+        // Un dato viejo leído en otra moneda (p. ej. antes de fijar EUR) ya no sirve
+        const previoValido = previo?.verificado && (!t.moneda || previo.moneda_origen === t.moneda);
+        if (previoValido) {
+          // Último precio verificado, recalculado con la tasa de hoy
+          const precio = previo.precio_origen ?? (previo.moneda_origen === 'VES' ? previo.bs : previo.usd);
+          const r = convertir(precio, previo.moneda_origen, tasa) ?? { moneda: previo.moneda_origen, precio, usd: previo.usd, bs: previo.bs };
+          productos[prod.id][t.id] = fila(r, { origen: previo.origen, estado: 'desactualizado', verificado: previo.verificado });
+        } else {
+          productos[prod.id][t.id] = fila(ref, { origen: 'referencia', estado: 'referencia', verificado: null });
+        }
       }
     }
   }
