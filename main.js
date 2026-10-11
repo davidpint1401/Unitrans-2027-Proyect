@@ -77,7 +77,7 @@
       return new Intl.NumberFormat('es-VE', { minimumFractionDigits: 2, maximumFractionDigits: 2 }).format(v);
     };
     var fecha = function (iso) {
-      return new Intl.DateTimeFormat('es-VE', { day: 'numeric', month: 'short', year: 'numeric' }).format(new Date(iso));
+      return new Intl.DateTimeFormat('es-VE', { day: 'numeric', month: 'short', year: 'numeric', timeZone: 'America/Caracas' }).format(new Date(iso));
     };
 
     fetch('data/precios.json', { cache: 'no-cache' })
@@ -88,7 +88,7 @@
         if (barra && tasa && tasa.usd) {
           barra.textContent = 'Tasa oficial BCV: Bs ' + num(tasa.usd) + ' por USD' +
             (tasa.eur ? ' · Bs ' + num(tasa.eur) + ' por EUR' : '') +
-            ' · consultada el ' + fecha(tasa.verificado);
+            (tasa.fecha_valor ? ' · fecha valor ' + fecha(tasa.fecha_valor) : ' · consultada el ' + fecha(tasa.verificado));
           barra.hidden = false;
         }
 
