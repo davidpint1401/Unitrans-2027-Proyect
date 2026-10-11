@@ -68,6 +68,65 @@
     else img.addEventListener('error', function () { fallback(img); });
   });
 
+  /* ---------- Precios de hormonas (data/precios.json) ---------- */
+  // El archivo lo actualiza cada día GitHub Actions (scripts/actualizar-precios.mjs).
+  // Si no carga, se quedan visibles los precios de referencia escritos en el HTML.
+  var celdas = document.querySelectorAll('[data-precio]');
+  if (celdas.length && window.fetch) {
+    var num = function (v) {
+      return new Intl.NumberFormat('es-VE', { minimumFractionDigits: 2, maximumFractionDigits: 2 }).format(v);
+    };
+    var fecha = function (iso) {
+      return new Intl.DateTimeFormat('es-VE', { day: 'numeric', month: 'short', year: 'numeric' }).format(new Date(iso));
+    };
+
+    fetch('data/precios.json', { cache: 'no-cache' })
+      .then(function (r) { if (!r.ok) throw new Error(r.status); return r.json(); })
+      .then(function (data) {
+        var tasa = data.tasa;
+        var barra = document.querySelector('[data-tasa]');
+        if (barra && tasa && tasa.usd) {
+          barra.textContent = 'Tasa oficial BCV: Bs ' + num(tasa.usd) + ' por USD' +
+            (tasa.eur ? ' · Bs ' + num(tasa.eur) + ' por EUR' : '') +
+            ' · consultada el ' + fecha(tasa.verificado);
+          barra.hidden = false;
+        }
+
+        celdas.forEach(function (td) {
+          var partes = td.getAttribute('data-precio').split('/');
+          var p = data.productos && data.productos[partes[0]] && data.productos[partes[0]][partes[1]];
+          if (!p || !(p.usd > 0)) return;
+
+          var usd = td.querySelector('.price-usd');
+          usd.textContent = '$' + num(p.usd);
+
+          var bs = td.querySelector('.price-bs');
+          if (!bs) {
+            bs = document.createElement('span');
+            bs.className = 'price-bs';
+            td.insertBefore(bs, td.querySelector('.price-unit'));
+          }
+          // "≈" cuando el monto es una conversión y no el precio publicado por la tienda
+          if (p.bs > 0) {
+            bs.textContent = (p.moneda_origen === 'VES' ? '' : '≈ ') + 'Bs ' + num(p.bs);
+            if (p.moneda_origen === 'VES') usd.textContent = '≈ $' + num(p.usd);
+          } else {
+            bs.textContent = '';
+          }
+
+          if (p.estado === 'ok' && p.verificado) {
+            td.title = 'Verificado en la web de la tienda el ' + fecha(p.verificado);
+          } else if (p.estado === 'desactualizado' && p.verificado) {
+            td.title = 'Último precio verificado el ' + fecha(p.verificado);
+            td.classList.add('is-stale');
+          } else {
+            td.title = 'Precio de referencia de nuestros correos informativos';
+          }
+        });
+      })
+      .catch(function () { /* sin conexión o abierto como archivo local */ });
+  }
+
   /* ---------- Año actual en el footer ---------- */
   document.querySelectorAll('[data-year]').forEach(function (el) {
     el.textContent = new Date().getFullYear();

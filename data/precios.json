@@ -1,0 +1,166 @@
+{
+  "actualizado": "2026-10-11T20:22:48.725Z",
+  "tasa": null,
+  "productos": {
+    "metzi": {
+      "plafam": {
+        "url": null,
+        "referencia_usd": 6,
+        "usd": 6,
+        "bs": null,
+        "moneda_origen": "USD",
+        "origen": "referencia",
+        "estado": "referencia",
+        "verificado": null
+      }
+    },
+    "mesigyna": {
+      "badan": {
+        "url": "https://farmaciabadan.com/4248-estradiol-valerato-noretisterona-estrad-noreti-5mg-50mg-amp-1ml-mesigyna",
+        "referencia_usd": 14.13,
+        "usd": 14.13,
+        "bs": null,
+        "moneda_origen": "USD",
+        "origen": "referencia",
+        "estado": "referencia",
+        "verificado": null
+      },
+      "farmatodo": {
+        "url": "https://www.farmatodo.com.ve/producto/111023674-estradiol--noretisterona-mesigyna-instayect",
+        "referencia_usd": 17.12,
+        "usd": 17.12,
+        "bs": null,
+        "moneda_origen": "USD",
+        "origen": "referencia",
+        "estado": "referencia",
+        "verificado": null
+      },
+      "locatel": {
+        "url": "https://www.locatel.com.ve/mesigyna_inyectable_11_cc/p",
+        "referencia_usd": 16.78,
+        "usd": 16.78,
+        "bs": null,
+        "moneda_origen": "USD",
+        "origen": "referencia",
+        "estado": "referencia",
+        "verificado": null
+      }
+    },
+    "espironolactona": {
+      "badan": {
+        "url": "https://farmaciabadan.com/8704-espironolactona-espironolactona-25mg-x-30-tab-siegfried",
+        "referencia_usd": 7.56,
+        "usd": 7.56,
+        "bs": null,
+        "moneda_origen": "USD",
+        "origen": "referencia",
+        "estado": "referencia",
+        "verificado": null
+      },
+      "farmatodo": {
+        "url": "https://www.farmatodo.com.ve/producto/115634505-espironolactona-25mg",
+        "referencia_usd": 9.01,
+        "usd": 9.01,
+        "bs": null,
+        "moneda_origen": "USD",
+        "origen": "referencia",
+        "estado": "referencia",
+        "verificado": null
+      },
+      "locatel": {
+        "url": "https://www.locatel.com.ve/siefried_espironolactona_25mg_x_30_tabletas/p",
+        "referencia_usd": 7.6,
+        "usd": 7.6,
+        "bs": null,
+        "moneda_origen": "USD",
+        "origen": "referencia",
+        "estado": "referencia",
+        "verificado": null
+      }
+    },
+    "enanbolic": {
+      "divacun": {
+        "url": null,
+        "referencia_usd": 85,
+        "usd": 85,
+        "bs": null,
+        "moneda_origen": "USD",
+        "origen": "referencia",
+        "estado": "referencia",
+        "verificado": null
+      },
+      "farmatodo": {
+        "url": "https://www.farmatodo.com.ve/producto/116405721-enanbolic-250mg-10ampollas-enantato-de-testosterona-cooper-pharma",
+        "referencia_usd": 64.18,
+        "usd": 64.18,
+        "bs": null,
+        "moneda_origen": "USD",
+        "origen": "referencia",
+        "estado": "referencia",
+        "verificado": null
+      },
+      "suplementos": {
+        "url": "https://suplementosvenezuela.com/products/enanbolic-10-amp",
+        "referencia_usd": 95,
+        "usd": 95,
+        "bs": null,
+        "moneda_origen": "USD",
+        "origen": "referencia",
+        "estado": "referencia",
+        "verificado": null
+      },
+      "badan": {
+        "url": "https://farmaciabadan.com/6972-testosterona-testosterona-enantato-250mg-ml-enanbolic",
+        "referencia_usd": 6.63,
+        "usd": 6.63,
+        "bs": null,
+        "moneda_origen": "USD",
+        "origen": "referencia",
+        "estado": "referencia",
+        "verificado": null
+      }
+    },
+    "testobolic": {
+      "divacun": {
+        "url": null,
+        "referencia_usd": 103,
+        "usd": 103,
+        "bs": null,
+        "moneda_origen": "USD",
+        "origen": "referencia",
+        "estado": "referencia",
+        "verificado": null
+      },
+      "farmatodo": {
+        "url": "https://www.farmatodo.com.ve/producto/114561439-testosterona-testobolic-1000mg-4ml-solucion-inyectable-cooper-pharma-limited",
+        "referencia_usd": 83.47,
+        "usd": 83.47,
+        "bs": null,
+        "moneda_origen": "USD",
+        "origen": "referencia",
+        "estado": "referencia",
+        "verificado": null
+      },
+      "suplementos": {
+        "url": "https://suplementosvenezuela.com/products/testobolic-nebido-undecanoate-testosterone-1-000mg",
+        "referencia_usd": 110,
+        "usd": 110,
+        "bs": null,
+        "moneda_origen": "USD",
+        "origen": "referencia",
+        "estado": "referencia",
+        "verificado": null
+      },
+      "badan": {
+        "url": "https://farmaciabadan.com/5784-testosterona-testostero-undecanoato-1g-4ml-testobolic",
+        "referencia_usd": 85.8,
+        "usd": 85.8,
+        "bs": null,
+        "moneda_origen": "USD",
+        "origen": "referencia",
+        "estado": "referencia",
+        "verificado": null
+      }
+    }
+  }
+}

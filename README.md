@@ -55,6 +55,13 @@ El diseño parte del **manual de marca Unitrans**. Es cálido, cercano y humano,
 ├── contacto.html         # Historia clínica, canales, voluntariado y recursos
 ├── styles.css            # Variables, reset, componentes y media queries
 ├── main.js               # Menú hamburguesa, acordeones FAQ y respaldo de imágenes
+├── data/
+│   ├── fuentes.json          # Hormonas, farmacias, enlaces y precios de referencia
+│   └── precios.json          # Precios y tasa BCV del día (lo genera GitHub Actions)
+├── scripts/
+│   └── actualizar-precios.mjs  # Consulta la tasa BCV y la web de cada farmacia
+├── .github/workflows/
+│   └── precios.yml           # Ejecuta el script dos veces al día
 ├── assets/
 │   ├── logo-unitrans.png         # Logo oficial a color (header)
 │   └── logo-unitrans-blanco.png  # Logo para fondos oscuros (footer)
@@ -70,7 +77,7 @@ El diseño parte del **manual de marca Unitrans**. Es cálido, cercano y humano,
 - Menú móvil con `aria-expanded`, que se cierra con <kbd>Esc</kbd>, y FAQ accesible con `aria-controls`.
 - Botones `.btn` con los modificadores `.btn-primary`, `.btn-outline` y `.btn-ghost`.
 - `<title>`, `<meta description>` y Open Graph en cada página.
-- No usa frameworks ni herramientas de build. La única dependencia externa es Google Fonts.
+- No usa frameworks ni herramientas de build. La única dependencia externa es Google Fonts. El script de precios usa Node 20 sin paquetes.
 
 ---
 
@@ -107,6 +114,33 @@ También puedes abrir `index.html` directamente con doble clic.
 En **Settings → Pages**, elige *Deploy from a branch*, la rama `main` y la carpeta `/ (root)`.
 
 ---
+
+## Precios de hormonas actualizados automáticamente
+
+La sección **Terapia hormonal** muestra cada precio en dólares y en bolívares a la tasa oficial del BCV del día.
+
+**Cómo funciona**
+
+1. Dos veces al día (7:17 am y 7:17 pm, hora de Venezuela) GitHub Actions ejecuta `scripts/actualizar-precios.mjs`.
+2. El script consulta la tasa oficial (USD y EUR) en [bcv.org.ve](https://www.bcv.org.ve/). Si el BCV no responde, usa la tasa oficial publicada por `ve.dolarapi.com`.
+3. Visita la página de cada producto listada en `data/fuentes.json` (Farmatodo, Badan, Locatel y Suplementos Venezuela) y lee el precio y la moneda en que está publicado (Bs, USD o EUR).
+4. Convierte el precio: si la tienda lo publica en Bs, calcula el equivalente en USD con la tasa BCV; si lo publica en USD, calcula los Bs. En la web, el monto convertido se marca con "≈".
+5. Guarda todo en `data/precios.json` y lo sube al repositorio. Netlify o Vercel vuelven a publicar el sitio solos.
+
+**Protecciones**
+
+- Si una tienda no responde o cambia su página, se conserva el último precio verificado y se marca con un asterisco (*).
+- Una lectura se descarta si se aleja más de 4 veces del precio de referencia de los correos (`referencia_usd`). Así se evitan errores por ofertas, otros productos o cambios de formato.
+- Si `data/precios.json` no carga, la web muestra los precios de referencia escritos en el HTML.
+- Divacún y PLAFAM no tienen página de producto, así que muestran el precio de referencia convertido a Bs.
+
+**Tareas habituales**
+
+- *Agregar o cambiar una farmacia:* edita `data/fuentes.json` (enlace, unidad y precio de referencia). El cambio por sí solo dispara una actualización. Las tablas del HTML se generan a partir de esta lista; si agregas un producto nuevo, avísale a quien mantiene el sitio para regenerar la tabla.
+- *Forzar una actualización:* en GitHub ve a **Actions → Actualizar precios de hormonas → Run workflow**.
+- *Ver qué leyó de cada tienda:* abre la última ejecución en **Actions**. El registro muestra cada precio leído y si se aceptó o se descartó.
+
+> Las actualizaciones programadas solo corren desde la rama principal (`main`): se activan cuando esta rama se fusione.
 
 ## Contenido y datos pendientes
 

@@ -632,6 +632,25 @@ a.card:hover { transform: translateY(-3px); box-shadow: var(--shadow); }
 .price-table tbody th { font-weight: 500; color: var(--text); }
 .price-table td { font-weight: 600; text-align: right; white-space: nowrap; color: var(--text); }
 .price-table thead th:last-child { text-align: right; }
+.price-table tbody th a { color: var(--text); text-decoration-color: var(--border); }
+.price-table tbody th a:hover { color: var(--brand-blue-dark); text-decoration-color: currentColor; }
+.price-usd { display: block; }
+.price-bs { display: block; font-size: 0.8125rem; font-weight: 500; color: var(--text-muted); }
+.price-unit { display: block; font-size: 0.75rem; font-weight: 500; color: var(--text-muted); }
+.price-table td.is-stale .price-usd::after { content: " *"; color: #6A5F12; }
+
+.rate-bar {
+  margin-bottom: 20px;
+  padding: 10px 16px;
+  font-size: 0.9375rem;
+  font-weight: 600;
+  color: var(--brand-blue-dark);
+  background: #fff;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-pill);
+  width: fit-content;
+  max-width: 100%;
+}
 
 /* ---------- 17. CTA final ---------- */
 .cta {
