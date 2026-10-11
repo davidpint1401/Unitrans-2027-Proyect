@@ -122,7 +122,7 @@ La sección **Terapia hormonal** muestra cada precio en dólares y en bolívares
 **Cómo funciona**
 
 1. Dos veces al día (7:17 am y 7:17 pm, hora de Venezuela) GitHub Actions ejecuta `scripts/actualizar-precios.mjs`.
-2. El script consulta la tasa oficial (USD y EUR) en [bcv.org.ve](https://www.bcv.org.ve/). Si el BCV no responde, usa la tasa oficial publicada por `ve.dolarapi.com`.
+2. El script consulta la tasa oficial (USD y EUR) y su fecha valor directamente en [bcv.org.ve](https://www.bcv.org.ve/). El BCV no tiene una API pública, así que se lee de su página. Como su servidor no envía completa la cadena de certificados, el workflow descarga el certificado intermedio que falta desde la dirección indicada en su propio certificado, y la conexión sigue verificada. Si el BCV no responde, se usa la tasa oficial publicada por `ve.dolarapi.com`.
 3. Visita la página de cada producto listada en `data/fuentes.json` (Farmatodo, Badan, Locatel y Suplementos Venezuela) y lee el precio y la moneda en que está publicado (Bs, USD o EUR).
 4. Convierte el precio: si la tienda lo publica en Bs, calcula el equivalente en USD con la tasa BCV; si lo publica en USD, calcula los Bs. En la web, el monto convertido se marca con "≈".
 5. Guarda todo en `data/precios.json` y lo sube al repositorio. Netlify o Vercel vuelven a publicar el sitio solos.
@@ -133,10 +133,12 @@ La sección **Terapia hormonal** muestra cada precio en dólares y en bolívares
 - Una lectura se descarta si se aleja más de 4 veces del precio de referencia de los correos (`referencia_usd`). Así se evitan errores por ofertas, otros productos o cambios de formato.
 - Si `data/precios.json` no carga, la web muestra los precios de referencia escritos en el HTML.
 - Divacún y PLAFAM no tienen página de producto, así que muestran el precio de referencia convertido a Bs.
+- **Badan bloquea las consultas automáticas desde los servidores de GitHub (HTTP 403).** Por ahora muestra el precio de referencia convertido a Bs. Si Badan cambia esa política, empezará a actualizarse solo.
 
 **Tareas habituales**
 
-- *Agregar o cambiar una farmacia:* edita `data/fuentes.json` (enlace, unidad y precio de referencia). El cambio por sí solo dispara una actualización. Las tablas del HTML se generan a partir de esta lista; si agregas un producto nuevo, avísale a quien mantiene el sitio para regenerar la tabla.
+- *Cambiar el enlace o el precio de referencia de una farmacia:* edita `data/fuentes.json`. El cambio por sí solo dispara una actualización.
+- *Agregar una farmacia o un producto:* agrégalo en `data/fuentes.json` (con un `id` de producto y de tienda) y añade la fila en la tabla de `acompanamiento.html` con la celda `<td data-precio="producto/tienda"><span class="price-usd">$0,00</span></td>`. La web la rellena sola.
 - *Forzar una actualización:* en GitHub ve a **Actions → Actualizar precios de hormonas → Run workflow**.
 - *Ver qué leyó de cada tienda:* abre la última ejecución en **Actions**. El registro muestra cada precio leído y si se aceptó o se descartó.
 
