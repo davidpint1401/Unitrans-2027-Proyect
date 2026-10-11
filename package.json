@@ -1,0 +1,23 @@
+{
+  "name": "unitrans-2027-proyect",
+  "version": "1.0.0",
+  "description": "> **Tu camino, acompañado.**",
+  "main": "main.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/davidpint1401/Unitrans-2027-Proyect.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/davidpint1401/Unitrans-2027-Proyect/issues"
+  },
+  "homepage": "https://github.com/davidpint1401/Unitrans-2027-Proyect#readme",
+  "dependencies": {
+    "@vercel/analytics": "^2.0.1"
+  }
+}
