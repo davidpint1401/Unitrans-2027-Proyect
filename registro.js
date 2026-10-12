@@ -168,7 +168,8 @@
   var enviarGoogleForm = function (d) {
     var datos = new URLSearchParams();
     Object.keys(cfg.campos).forEach(function (k) {
-      if (cfg.campos[k] && d[k]) datos.append(cfg.campos[k], d[k]);
+      var v = k === 'correoRecolectado' ? d.correo : d[k];
+      if (cfg.campos[k] && v) datos.append(cfg.campos[k], v);
     });
     if (cfg.pageHistory) datos.append('pageHistory', cfg.pageHistory);
     // Google Forms no deja leer la respuesta desde otra web: sin error de red, se da por enviado

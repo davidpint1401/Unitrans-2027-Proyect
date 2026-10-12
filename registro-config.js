@@ -15,23 +15,24 @@ window.UNITRANS_REGISTRO = {
   activo: true,
 
   // A. URL de la aplicación web de Apps Script (termina en /exec)
-  appsScriptUrl: '',
+  appsScriptUrl: 'https://script.google.com/macros/s/AKfycbysoZGK1-EGUh3ndnnRDK7ymok2na6hjAJ5HGHlG8iuzoNd3hQLtjt7XzewLdHjc98gkA/exec',
 
   // B. Google Form de historia clínica
   formAction: 'https://docs.google.com/forms/d/e/1FAIpQLSdtpMTkAnMtqpmvA0tcirgAL3okOtXZBCxzfw0XreKmvx6rZQ/formResponse',
   pageHistory: '',            // si el formulario tiene secciones: '0,1,2'
   campos: {                   // entry.XXXX de cada pregunta; vacío = no se envía
-    correo: '',               // "Correo" (si es la que recopila Google, usa 'emailAddress')
-    nombre: '',               // Nombres (con el que se identifica)
-    apellidos: '',            // Apellidos
-    sexoAsignado: '',         // Sexo que asignado al nacer
-    identidad: '',            // ¿Cuál es su identidad de género?
-    edad: '',                 // ¿Qué edad tiene?
-    lopnna: '',               // De ser menor de edad, ¿está consciente del Artículo 50 de la LOPNNA?
-    estado: '',               // ¿Estado donde vive?
-    telefono: '',             // Número de teléfono
-    expectativas: '',         // ¿Cuáles son sus expectativas de atención?
-    intervenciones: '',       // Intervenciones de su interés
+    correoRecolectado: 'emailAddress',    // "Correo" que recopila Google al inicio del formulario
+    correo: 'entry.1045781291',           // Correo electrónico
+    nombre: 'entry.2005620554',           // Nombres (con el que se identifica)
+    apellidos: 'entry.226430101',         // Apellidos
+    sexoAsignado: 'entry.345884997',      // Sexo que asignado al nacer
+    identidad: 'entry.1013692133',        // ¿Cuál es su identidad de género?
+    edad: 'entry.1498399976',             // ¿Qué edad tiene?
+    lopnna: 'entry.1446475875',           // De ser menor de edad, ¿está consciente del Artículo 50 de la LOPNNA?
+    estado: 'entry.1065046570',           // ¿Estado donde vive?
+    telefono: 'entry.1166974658',         // Número de teléfono
+    expectativas: 'entry.1060290331',     // ¿Cuáles son sus expectativas de atención?
+    intervenciones: 'entry.207893456',    // Intervenciones de su interés
     // Preguntas nuevas, solo si las agregas al formulario
     fechaNacimiento: '',
     acompanamiento: '',
