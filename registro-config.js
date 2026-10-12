@@ -15,7 +15,7 @@ window.UNITRANS_REGISTRO = {
   activo: true,
 
   // A. URL de la aplicación web de Apps Script (termina en /exec)
-  appsScriptUrl: 'https://script.google.com/macros/s/AKfycbyZVOWA5D4rfGwijl6y-Z5YRixWPfIo0BG_UbYimpd1l4gaugmvPrhbgszS1RwpXf7T1w/exec',
+  appsScriptUrl: 'https://script.google.com/macros/s/AKfycbybrOm7jmeTibHkpqUaw-0Vb0DxfeZ7AUOr5MiyB70uza3gUO9uv6IJ-J3b728rKxnn/exec',
 
   // B. Google Form de historia clínica. Desactivado: el formulario rechaza los envíos externos (HTTP 400),
   // así que el Apps Script copia cada registro en su hoja de respuestas (HOJA_FORMULARIO en Codigo.gs).

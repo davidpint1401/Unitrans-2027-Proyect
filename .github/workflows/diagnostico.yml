@@ -1,0 +1,19 @@
+name: Verificación del Apps Script (temporal)
+
+on:
+  push:
+    branches: [claude/jolly-bell-8tktgj]
+    paths: ['.github/workflows/diagnostico.yml']
+
+jobs:
+  verificar:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Acceso público y un registro de prueba
+        run: |
+          URL="https://script.google.com/macros/s/AKfycbybrOm7jmeTibHkpqUaw-0Vb0DxfeZ7AUOr5MiyB70uza3gUO9uv6IJ-J3b728rKxnn/exec"
+          curl -s -o /dev/null -w "GET primer salto: HTTP %{http_code} → %{redirect_url}\n" "$URL"
+          echo "POST de prueba (como lo envía la web):"
+          curl -sL -H "Content-Type: text/plain;charset=utf-8" -w "\nHTTP %{http_code}\n" \
+            --data-binary '{"correo":"fundaunitrans2020@gmail.com","nombre":"PRUEBA WEB","apellidos":"BORRAR","fechaNacimiento":"1996-01-01","edad":"30","sexoAsignado":"Intersex","identidad":"No Binario","estado":"Prueba","telefono":"0000000000","expectativas":"Sólo atención Psicológica","intervenciones":"","lopnna":"","acompanamiento":"","consentimiento":"Acepto","sitioWeb":""}' \
+            "$URL" | head -c 400
