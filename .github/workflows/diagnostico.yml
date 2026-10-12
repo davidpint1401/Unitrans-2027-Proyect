@@ -9,39 +9,23 @@ jobs:
   diagnostico:
     runs-on: ubuntu-latest
     steps:
-      - name: Reglas del formulario y errores del envío
+      - name: Envío con los campos ocultos del formulario (se detiene en el primero aceptado)
         run: |
           FORM="https://docs.google.com/forms/d/e/1FAIpQLSdtpMTkAnMtqpmvA0tcirgAL3okOtXZBCxzfw0XreKmvx6rZQ"
           curl -s -c jar.txt "$FORM/viewform" -o view.html
-          curl -s -b jar.txt -o r.html -w "ENVIO: HTTP %{http_code}\n" \
-            --data-urlencode "emailAddress=prueba-web@example.com" \
-            --data-urlencode "entry.1045781291=prueba-web@example.com" \
-            --data-urlencode "entry.2005620554=PRUEBA WEB" --data-urlencode "entry.226430101=BORRAR" \
-            --data-urlencode "entry.345884997=Intersex" --data-urlencode "entry.1013692133=No Binario" \
-            --data-urlencode "entry.1498399976=30" --data-urlencode "entry.1065046570=Prueba" \
-            --data-urlencode "entry.1166974658=04140000000" \
-            --data-urlencode "entry.1060290331=Sólo atención Psicológica" \
-            --data-urlencode "pageHistory=0" \
-            "$FORM/formResponse" > envio.txt
-          cat envio.txt
           node -e '
-            const fs = require("fs");
-            const datos = (f) => { const h = fs.readFileSync(f, "utf8"); const m = h.match(/FB_PUBLIC_LOAD_DATA_ = (\[[\s\S]*?\]);\s*<\/script>/); return m ? JSON.parse(m[1]) : null; };
-            const v = datos("view.html");
-            console.log("REGLAS DE VALIDACIÓN POR PREGUNTA:");
-            for (const it of v[1][1]) for (const q of (it[4] || [])) console.log("  entry." + q[0], "·", JSON.stringify(q[4] ?? null), "·", (it[1] || "").slice(0, 40));
-            console.log("AJUSTES DEL FORMULARIO d[1][10]:", JSON.stringify(v[1][10]), "· d[1][2..9]:", JSON.stringify(v[1].slice(2, 10)).slice(0, 300));
-            const h = fs.readFileSync("r.html", "utf8");
-            const texto = h.replace(/<script[\s\S]*?<\/script>/g, " ").replace(/<style[\s\S]*?<\/style>/g, " ");
-            console.log("ALERTAS EN LA RESPUESTA:");
-            const alertas = [...texto.matchAll(/role="alert"[^>]*>([\s\S]{0,200}?)<\/div>/g)].map(m => m[1].replace(/<[^>]*>/g, "").trim()).filter(Boolean);
-            console.log("  ", alertas.length ? alertas : "(ninguna)");
-            const inval = [...h.matchAll(/aria-invalid="true"[^>]*/g)].map(m => m[0].slice(0, 160));
-            console.log("CAMPOS INVÁLIDOS:", inval.length ? inval : "(ninguno)");
-            const r = datos("r.html");
-            console.log("¿La respuesta trae el formulario de nuevo?:", !!r);
-            const titulo = (h.match(/<title>([^<]*)/) || [])[1];
-            console.log("TÍTULO:", titulo);
-            const cuerpo = texto.replace(/<[^>]*>/g, "\n").split("\n").map(s => s.trim()).filter(s => s && s.length < 160);
-            console.log("PRIMEROS TEXTOS VISIBLES:", JSON.stringify(cuerpo.slice(0, 25)));
+            const h = require("fs").readFileSync("view.html", "utf8");
+            const ocultos = [...h.matchAll(/<input[^>]*type="hidden"[^>]*>/g)].map(m => m[0]);
+            const pares = ocultos.map(i => [ (i.match(/name="([^"]*)"/)||[])[1], ((i.match(/value="([^"]*)"/)||[])[1]||"").replace(/&quot;/g, "\"").replace(/&amp;/g, "&") ]).filter(p => p[0]);
+            console.log("OCULTOS:", JSON.stringify(pares));
+            require("fs").writeFileSync("ocultos.txt", pares.map(([k,v]) => k + "=" + encodeURIComponent(v)).join("&"));
           '
+          ENTRADAS="entry.1045781291=fundaunitrans2020%40gmail.com&entry.2005620554=PRUEBA%20WEB&entry.226430101=BORRAR&entry.345884997=Intersex&entry.1013692133=No%20Binario&entry.1498399976=30&entry.1065046570=Prueba&entry.1166974658=04140000000&entry.1060290331=S%C3%B3lo%20atenci%C3%B3n%20Psicol%C3%B3gica"
+          probar () {
+            code=$(curl -s -b jar.txt -o r.html -w "%{http_code}" -H "Content-Type: application/x-www-form-urlencoded" --data "$2" "$FORM/formResponse")
+            echo "== $1 → HTTP $code"; [ "$code" = "200" ]
+          }
+          OC=$(cat ocultos.txt)
+          probar "E: ocultos + emailAddress + entradas" "$OC&emailAddress=fundaunitrans2020%40gmail.com&$ENTRADAS" && exit 0
+          probar "F: entradas + emailAddress (sin ocultos)" "emailAddress=fundaunitrans2020%40gmail.com&$ENTRADAS" && exit 0
+          echo "Ninguna aceptada"
