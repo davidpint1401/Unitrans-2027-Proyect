@@ -55,8 +55,10 @@ El diseño parte del **manual de marca Unitrans**. Es cálido, cercano y humano,
 ├── contacto.html         # Historia clínica, canales, voluntariado y recursos
 ├── styles.css            # Variables, reset, componentes y media queries
 ├── main.js               # Menú hamburguesa, acordeones FAQ y respaldo de imágenes
-├── registro.js           # Registro de pacientes → Google Form y desbloqueo de costos
-├── registro-config.js    # Conexión con el Google Form (códigos entry y opciones)
+├── registro.js           # Registro de pacientes y desbloqueo de costos
+├── registro-config.js    # Destino de los registros y opciones del formulario
+├── google-apps-script/
+│   └── Codigo.gs         # Receptor de registros para la hoja de la Fundación
 ├── data/
 │   ├── fuentes.json          # Hormonas, farmacias, enlaces y precios de referencia
 │   └── precios.json          # Precios y tasa BCV del día (lo genera GitHub Actions)
@@ -149,41 +151,37 @@ La sección **Terapia hormonal** muestra cada precio en dólares y en bolívares
 
 ## Registro de pacientes (historia clínica en la web)
 
-La página **Contacto** incluye un formulario de registro que envía las respuestas directamente al **Google Form de historia clínica**, así la hoja de respuestas sigue creciendo como siempre. Al registrarse, la persona desbloquea en **Acompañamiento** los costos y contactos de especialistas y los precios de las hormonas.
+La página **Contacto** tiene un formulario de registro (`#registro`). Al completarlo, la persona desbloquea en **Acompañamiento** los costos y contactos de especialistas y los precios de las hormonas. Las opciones de cada pregunta son las mismas del Google Form de historia clínica.
 
-**Está desactivado** (`activo: false` en `registro-config.js`) hasta conectarlo con el formulario. Mientras tanto, la web funciona igual que antes.
-
-### Reglas por edad (LOPNNA)
+### Reglas por edad (calculada con la fecha de nacimiento)
 
 | Edad | Qué pasa |
 |---|---|
-| Menos de 14 años | Debe registrarse con su madre, padre o representante. Se piden los datos del representante y su autorización. |
-| 14 a 17 años | Elige: *con mi representante* (se piden sus datos) o *por mi cuenta*. En ese caso se explica el **Artículo 50 de la LOPNNA** y debe confirmar que lo conoce. |
+| Menos de 14 años | Se registra con su madre, padre o representante: se piden sus datos y su autorización. |
+| 14 a 17 años | Se le pregunta si quiere que su representante le acompañe. **Sí:** se piden los datos del representante. **No:** continúa por su cuenta. |
+| Menores de 18 | Se muestra el Artículo 50 de la LOPNNA y se pregunta si lo conoce (Sí/No). |
 | 18 años o más | Registro individual. |
 
-### Cómo activarlo
+### A dónde llegan los registros (`registro-config.js`)
 
-1. **Agrega al Google Form estas preguntas nuevas** (todas opcionales en el formulario; la web decide cuándo son obligatorias):
-   - ¿Se registra con acompañamiento de su representante? (opción múltiple: `Sí, con mi representante` / `No, por mi cuenta (14 años o más)`)
-   - Nombre y apellido del representante · Parentesco · Cédula del representante · Teléfono del representante · Correo del representante (respuesta corta)
-   - Consentimiento para el uso de los datos (casilla: `Acepto`)
-2. **Revisa la configuración del formulario:**
-   - Si recopila correos, debe ser **"Respuestas de los encuestados"**, no "Verificado".
-   - No debe exigir iniciar sesión en Google.
-   Si no, Google rechaza los envíos que llegan desde la web.
-3. **Saca los códigos de cada pregunta.** En el Google Form ve a **⋮ → Obtener enlace rellenado previamente**, llena todas las preguntas con cualquier dato y pulsa **Obtener enlace**. El enlace contiene `entry.123456789=...` por cada pregunta.
-4. **En `registro-config.js`:**
-   - Copia cada número `entry.` en `campos`.
-   - Revisa que los textos de `opciones` (identidad, sexo asignado, estados, expectativas) sean **idénticos** a los del formulario.
-   - Si el formulario tiene secciones, completa `pageHistory` (por ejemplo `'0,1,2'`).
-   - Cambia `activo` a `true`.
-5. **Prueba:** haz un registro de prueba y confirma que aparece en la hoja de respuestas.
+1. **Hoja propia de la Fundación (recomendado).** Guarda todas las respuestas, incluidas la fecha de nacimiento y los datos del representante, y avisa por correo de cada registro nuevo. Para instalarla:
+   1. Con la cuenta de la Fundación, crea una hoja de cálculo nueva en Google Drive.
+   2. Ve a **Extensiones → Apps Script** y pega el contenido de `google-apps-script/Codigo.gs`.
+   3. Pulsa **Implementar → Nueva implementación → Aplicación web**, con *Ejecutar como: Yo* y *Quién tiene acceso: Cualquier usuario*.
+   4. Copia la URL que termina en `/exec` y pégala en `appsScriptUrl`.
+2. **Google Form de historia clínica (opcional, además o en lugar de la hoja).** En el formulario ve a **⋮ → Obtener enlace rellenado previamente**, llena todo, copia el enlace y pon cada número `entry.` en `campos`. Para que Google acepte los envíos desde la web:
+   - el formulario no debe exigir iniciar sesión;
+   - la pregunta de **intervenciones quirúrgicas** no debe ser obligatoria, porque solo aplica a quien elige transición quirúrgica;
+   - la fecha de nacimiento y los datos del representante solo llegan si agregas esas preguntas al formulario.
+3. **Sin ninguno configurado:** al enviar se abre la aplicación de correo de la persona con sus datos, dirigida a `correoRespaldo`. Funciona, pero depende de que la persona pulse *Enviar*.
+
+Para volver a la web de antes (botón al Google Form y costos visibles), pon `activo: false`.
 
 ### Privacidad y límites
 
 - En el navegador solo se guarda que la persona ya se registró y la fecha. Ningún dato personal queda en el dispositivo.
-- El bloqueo de costos y contactos es una **invitación a registrarse, no una protección de seguridad**. Al ser un sitio estático, la información sigue en el código de la página y alguien con conocimientos técnicos podría verla. Proteger esos datos de verdad requeriría un servidor con inicio de sesión.
-- Google Forms no permite confirmar desde otra web si el envío llegó. La web lo da por enviado si no hubo error de conexión, así que conviene revisar la hoja de respuestas tras activarlo.
+- La hoja propia neutraliza fórmulas en las respuestas y descarta envíos de bots (campo trampa invisible).
+- El bloqueo de costos y contactos es una **invitación a registrarse, no una protección de seguridad**. Al ser un sitio estático, la información sigue en el código de la página. Protegerla de verdad requeriría un servidor con inicio de sesión.
 
 ## Contenido y datos pendientes
 

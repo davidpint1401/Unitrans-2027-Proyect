@@ -697,7 +697,7 @@ html:not(.reg-locked) [data-candado] { display: none !important; }
 .req { color: #B23A57; }
 .field-help { font-size: 0.875rem; color: var(--text-muted); font-weight: 400; }
 .reg-form input[type="text"], .reg-form input[type="email"], .reg-form input[type="tel"],
-.reg-form input[type="number"], .reg-form select, .reg-form textarea {
+.reg-form input[type="number"], .reg-form input[type="date"], .reg-form select, .reg-form textarea {
   width: 100%;
   min-height: 48px;
   padding: 10px 14px;
@@ -734,6 +734,14 @@ html:not(.reg-locked) [data-candado] { display: none !important; }
 .reg-success { align-items: flex-start; padding: 32px 28px; }
 .reg-success:focus { outline: none; }
 #reg-ya-registrado { margin-bottom: 20px; }
+.field--date { max-width: 260px; }
+.choice-group--inline { grid-template-columns: repeat(2, minmax(0, 120px)); }
+.lopnna { margin-top: 16px; padding: 18px; background: var(--bg-soft); border-radius: var(--radius); }
+.lopnna blockquote { margin: 0; padding-left: 14px; border-left: 4px solid var(--logo-orange); }
+.lopnna blockquote p { font-style: italic; color: var(--text); }
+.lopnna blockquote footer { margin-top: 6px; font-size: 0.875rem; font-weight: 600; color: var(--text-muted); }
+.hp { position: absolute; left: -9999px; width: 1px; height: 1px; overflow: hidden; }
+.reg-success .notice { margin-top: 4px; }
 
 /* ---------- 17. CTA final ---------- */
 .cta {

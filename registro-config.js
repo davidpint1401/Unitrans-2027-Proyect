@@ -1,55 +1,55 @@
 /*
- * Configuración del registro de la web → Google Form de historia clínica.
+ * Configuración del registro de pacientes de la web.
  *
- * Mientras `activo` sea false, la web funciona como siempre: botón al Google Form
- * y costos/contactos visibles. Para activarlo:
- *   1. En el Google Form: ⋮ → "Obtener enlace rellenado previamente", llena todo y copia el enlace.
- *      Cada pregunta aparece como entry.123456789: ese número va en `campos`.
- *   2. Los textos de `opciones` deben ser IDÉNTICOS a las opciones del formulario.
- *   3. Cambia `activo` a true.
+ * A dónde van los registros (puede ser a uno o a los dos):
+ *   A. appsScriptUrl → hoja de cálculo propia de la Fundación (recomendado: guarda TODOS los datos).
+ *      Ver google-apps-script/Codigo.gs para instalarlo.
+ *   B. Google Form de historia clínica → completa los códigos entry.XXXX en `campos`
+ *      (en el formulario: ⋮ → "Obtener enlace rellenado previamente").
+ * Si no hay ninguno configurado, al enviar se prepara un correo a la Fundación con los datos.
+ *
  * Ver README → "Registro de pacientes".
  */
 window.UNITRANS_REGISTRO = {
-  activo: false,
+  // false = la web vuelve a funcionar como antes (botón al Google Form, costos visibles)
+  activo: true,
 
-  // Mismo ID del formulario, terminando en /formResponse
+  // A. URL de la aplicación web de Apps Script (termina en /exec)
+  appsScriptUrl: 'https://script.google.com/macros/s/AKfycbysoZGK1-EGUh3ndnnRDK7ymok2na6hjAJ5HGHlG8iuzoNd3hQLtjt7XzewLdHjc98gkA/exec',
+
+  // B. Google Form de historia clínica
   formAction: 'https://docs.google.com/forms/d/e/1FAIpQLSdtpMTkAnMtqpmvA0tcirgAL3okOtXZBCxzfw0XreKmvx6rZQ/formResponse',
-
-  // Si el formulario tiene secciones (páginas), pon aquí sus números: '0,1,2'. Si no, déjalo vacío.
-  pageHistory: '',
-
-  // Código entry.XXXX de cada pregunta. Vacío = esa respuesta no se envía.
-  campos: {
-    // Preguntas que ya existen en el formulario
-    correoRecolectado: 'emailAddress',   // "Dirección de correo electrónico" (la que recopila Google)
-    nombre: '',                          // Nombres (con el que se identifica)
-    apellidos: '',                       // Apellidos
-    sexoAsignado: '',                    // Sexo asignado al nacer
-    identidad: '',                       // ¿Cuál es su identidad de género?
-    correo: '',                          // Correo electrónico
-    estado: '',                          // ¿Estado donde vive?
-    telefono: '',                        // Número de teléfono
-    expectativas: '',                    // ¿Cuáles son sus expectativas de atención?
-    intervenciones: '',                  // Intervenciones de su interés (transición quirúrgica)
-    edad: '',                            // ¿Qué edad tiene?
-    lopnna: '',                          // ¿Conoce el Artículo 50 de la LOPNNA? (menores de edad)
-
-    // Preguntas NUEVAS que conviene agregar al formulario (ver README)
-    acompanamiento: '',                  // ¿Se registra con acompañamiento de su representante?
-    representanteNombre: '',             // Nombre y apellido del representante
-    representanteParentesco: '',         // Parentesco
-    representanteCedula: '',             // Cédula del representante
-    representanteTelefono: '',           // Teléfono del representante
-    representanteCorreo: '',             // Correo del representante
-    consentimiento: ''                   // Consentimiento para el uso de los datos
+  pageHistory: '',            // si el formulario tiene secciones: '0,1,2'
+  campos: {                   // entry.XXXX de cada pregunta; vacío = no se envía
+    correoRecolectado: 'emailAddress',    // "Correo" que recopila Google al inicio del formulario
+    correo: 'entry.1045781291',           // Correo electrónico
+    nombre: 'entry.2005620554',           // Nombres (con el que se identifica)
+    apellidos: 'entry.226430101',         // Apellidos
+    sexoAsignado: 'entry.345884997',      // Sexo que asignado al nacer
+    identidad: 'entry.1013692133',        // ¿Cuál es su identidad de género?
+    edad: 'entry.1498399976',             // ¿Qué edad tiene?
+    lopnna: 'entry.1446475875',           // De ser menor de edad, ¿está consciente del Artículo 50 de la LOPNNA?
+    estado: 'entry.1065046570',           // ¿Estado donde vive?
+    telefono: 'entry.1166974658',         // Número de teléfono
+    expectativas: 'entry.1060290331',     // ¿Cuáles son sus expectativas de atención?
+    intervenciones: 'entry.207893456',    // Intervenciones de su interés
+    // Preguntas nuevas, solo si las agregas al formulario
+    fechaNacimiento: '',
+    acompanamiento: '',
+    representanteNombre: '',
+    representanteParentesco: '',
+    representanteCedula: '',
+    representanteTelefono: '',
+    representanteCorreo: ''
   },
 
-  // Opciones de las preguntas de selección (deben coincidir letra por letra con el formulario)
+  // Correo que recibe los datos si no hay A ni B configurados
+  correoRespaldo: 'fundaunitrans2020@gmail.com',
+
+  // Opciones: idénticas a las del Google Form de historia clínica
   opciones: {
-    sexoAsignado: ['Femenino', 'Masculino', 'Intersexual', 'Prefiero no decirlo'],
-    identidad: ['Mujer trans', 'Hombre trans', 'Persona no binaria', 'Género fluido', 'Prefiero no decirlo'],
-    // true si la pregunta de identidad tiene la opción "Otro" de Google Forms
-    identidadTieneOtro: true,
+    sexoAsignado: ['Hembra', 'Varón', 'Intersex'],
+    identidad: ['Mujer', 'Hombre', 'Mujer Trans (HaM)', 'Hombre Trans (MaH)', 'Genderqueer', 'No Binario'],
     estado: [
       'Amazonas', 'Anzoátegui', 'Apure', 'Aragua', 'Barinas', 'Bolívar', 'Carabobo', 'Cojedes',
       'Delta Amacuro', 'Distrito Capital', 'Falcón', 'Guárico', 'La Guaira', 'Lara', 'Mérida',
@@ -57,20 +57,18 @@ window.UNITRANS_REGISTRO = {
       'Yaracuy', 'Zulia', 'Fuera de Venezuela'
     ],
     expectativas: [
-      'Asesoría y acompañamiento',
-      'Acompañamiento psicológico',
-      'Terapia hormonal',
-      'Ginecología',
+      'Sólo atención Psicológica',
+      'Tratamiento de Reemplazo Hormonal (TRH)',
       'Transición quirúrgica',
-      'Fisioterapia y rehabilitación',
-      'Información y orientación'
+      'Todas las anteriores'
     ],
-    // Cuál de las expectativas activa la pregunta de intervenciones
-    expectativaQuirurgica: 'Transición quirúrgica',
+    // Con estas expectativas se pregunta por las intervenciones quirúrgicas
+    expectativasQuirurgicas: ['Transición quirúrgica', 'Todas las anteriores'],
+    intervenciones: ['Facial', 'Corporal', 'Genital', 'Todas las anteriores'],
     parentesco: ['Madre', 'Padre', 'Representante legal', 'Otro familiar'],
-    lopnnaSi: 'Sí',
+    si: 'Sí',
+    no: 'No',
     acompanamientoSi: 'Sí, con mi representante',
-    acompanamientoNo: 'No, por mi cuenta (14 años o más)',
-    consentimientoSi: 'Acepto'
+    acompanamientoNo: 'No, por mi cuenta'
   }
 };
