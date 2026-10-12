@@ -1,0 +1,19 @@
+name: Verificación del Apps Script (temporal, solo lectura)
+
+on:
+  push:
+    branches: [claude/jolly-bell-8tktgj]
+    paths: ['.github/workflows/diagnostico.yml']
+
+jobs:
+  verificar:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Búsqueda de registros (no guarda nada)
+        run: |
+          URL="https://script.google.com/macros/s/AKfycbwdGiv1Ph2Ud4RJccRU2NLgbbba3JktkduiEOxBiLhAfebQYc7jagPHb-kC5i6Ud704/exec"
+          curl -s -o /dev/null -w "GET: HTTP %{http_code} %{redirect_url}\n" "$URL"
+          echo "1) Correo inventado:"
+          curl -sL -H "Content-Type: text/plain;charset=utf-8" --data-binary '{"accion":"verificar","correo":"no-existe-unitrans@example.com","telefono4":"1234"}' "$URL"; echo
+          echo "2) Registro de prueba anterior (correo de la Fundación, teléfono 0000000000):"
+          curl -sL -H "Content-Type: text/plain;charset=utf-8" --data-binary '{"accion":"verificar","correo":"fundaunitrans2020@gmail.com","telefono4":"0000"}' "$URL"; echo
