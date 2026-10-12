@@ -9,21 +9,29 @@ jobs:
   diagnostico:
     runs-on: ubuntu-latest
     steps:
-      - name: Un envío de prueba al Google Form (mismos datos que manda la web)
+      - name: Variantes de envío al Google Form (se detiene en la primera aceptada)
         run: |
-          curl -s -o resp.html -w "HTTP %{http_code}\n" \
-            -H "Content-Type: application/x-www-form-urlencoded;charset=UTF-8" \
-            --data-urlencode "emailAddress=prueba-web@example.com" \
-            --data-urlencode "entry.1045781291=prueba-web@example.com" \
-            --data-urlencode "entry.2005620554=PRUEBA WEB" \
-            --data-urlencode "entry.226430101=BORRAR" \
-            --data-urlencode "entry.345884997=Intersex" \
-            --data-urlencode "entry.1013692133=No Binario" \
-            --data-urlencode "entry.1498399976=30" \
-            --data-urlencode "entry.1065046570=Prueba" \
-            --data-urlencode "entry.1166974658=0000000000" \
-            --data-urlencode "entry.1060290331=Sólo atención Psicológica" \
-            "https://docs.google.com/forms/d/e/1FAIpQLSdtpMTkAnMtqpmvA0tcirgAL3okOtXZBCxzfw0XreKmvx6rZQ/formResponse"
-          grep -o '<title>[^<]*</title>' resp.html || true
-          grep -o 'freebirdFormviewerViewResponseConfirmationMessage[^<]*<[^<]*' resp.html | head -1 || true
-          grep -oi 'Se ha registrado tu respuesta\|Your response has been recorded\|Esta pregunta es obligatoria\|This is a required question\|ServiceLogin' resp.html | sort | uniq -c || true
+          FORM="https://docs.google.com/forms/d/e/1FAIpQLSdtpMTkAnMtqpmvA0tcirgAL3okOtXZBCxzfw0XreKmvx6rZQ"
+          curl -s -c jar.txt "$FORM/viewform" -o view.html
+          FBZX=$(grep -o 'name="fbzx" value="[^"]*"' view.html | head -1 | sed 's/.*value="//;s/"//')
+          echo "fbzx: ${FBZX:-(no encontrado)}"
+          echo "Campos ocultos del formulario:"; grep -o '<input type="hidden" name="[^"]*"' view.html | sort -u
+          BASE=( --data-urlencode "entry.1045781291=prueba-web@example.com"
+                 --data-urlencode "entry.2005620554=PRUEBA WEB" --data-urlencode "entry.226430101=BORRAR"
+                 --data-urlencode "entry.345884997=Intersex" --data-urlencode "entry.1013692133=No Binario"
+                 --data-urlencode "entry.1498399976=30" --data-urlencode "entry.1065046570=Prueba"
+                 --data-urlencode "entry.1166974658=0000000000"
+                 --data-urlencode "entry.1060290331=Sólo atención Psicológica" )
+          probar () {
+            nombre="$1"; shift
+            code=$(curl -s -b jar.txt -o r.html -w "%{http_code}" "$@" "${BASE[@]}" "$FORM/formResponse")
+            echo; echo "== $nombre → HTTP $code"
+            # textos de error visibles en la respuesta
+            sed -e 's/<[^>]*>/\n/g' r.html | grep -i 'obligatori\|requerid\|válid\|valid\|correo\|email\|error' | sort -u | head -8
+            [ "$code" = "200" ]
+          }
+          probar "A: con emailAddress" --data-urlencode "emailAddress=prueba-web@example.com" && exit 0
+          probar "B: + pageHistory=0" --data-urlencode "emailAddress=prueba-web@example.com" --data-urlencode "pageHistory=0" && exit 0
+          probar "C: + fbzx y fvv" --data-urlencode "emailAddress=prueba-web@example.com" --data-urlencode "pageHistory=0" --data-urlencode "fvv=1" --data-urlencode "fbzx=$FBZX" && exit 0
+          probar "D: sin emailAddress" --data-urlencode "pageHistory=0" && exit 0
+          echo "Ninguna variante fue aceptada"
