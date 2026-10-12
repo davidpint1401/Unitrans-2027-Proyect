@@ -165,8 +165,55 @@
       body: JSON.stringify(d)
     })
       .then(function (r) { return r.json(); })
-      .then(function (j) { if (!j || !j.ok) throw new Error((j && j.error) || 'sin confirmación'); });
+      .then(function (j) {
+        if (!j || !j.ok) throw new Error((j && j.error) || 'sin confirmación');
+        return j;
+      });
   };
+
+  /* ---------- Pantalla final ---------- */
+  var mostrarExito = function (yaRegistrado) {
+    desbloquear();
+    form.hidden = true;
+    var acceso = $('acceso');
+    if (acceso) acceso.hidden = true;
+    if (yaRegistrado) {
+      $('reg-exito-titulo').textContent = 'Ya presentas un registro en Unitrans';
+      $('reg-exito-texto').textContent = 'Como ya presentas un registro en Unitrans, puedes ver los precios hormonales y los datos actualizados de los médicos siempre que quieras. No necesitas registrarte de nuevo.';
+    }
+    var ok = $('reg-exito');
+    ok.hidden = false;
+    ok.focus();
+  };
+
+  /* ---------- Acceso de quien ya se registró (web o Google Form) ---------- */
+  var formAcceso = $('form-acceso');
+  if (formAcceso) {
+    var estadoAcceso = $('acc-estado');
+    var botonAcceso = formAcceso.querySelector('button[type="submit"]');
+    formAcceso.addEventListener('submit', function (ev) {
+      ev.preventDefault();
+      if (!formAcceso.reportValidity()) return;
+      botonAcceso.disabled = true;
+      estadoAcceso.className = 'form-status';
+      estadoAcceso.textContent = 'Buscando tu registro…';
+      // Solo se envían el correo y 4 dígitos; la web nunca recibe datos de otras personas
+      enviarAppsScript({ accion: 'verificar', correo: $('acc-correo').value.trim(), telefono4: $('acc-tel4').value.trim() })
+        .then(function (j) {
+          if (j.registrado) return mostrarExito(true);
+          botonAcceso.disabled = false;
+          estadoAcceso.className = 'form-status is-error';
+          estadoAcceso.textContent = 'No encontramos un registro con ese correo y esos 4 dígitos. Revisa los datos o completa el registro más abajo.';
+        })
+        .catch(function (err) {
+          botonAcceso.disabled = false;
+          estadoAcceso.className = 'form-status is-error';
+          estadoAcceso.textContent = /intentos/.test(err.message)
+            ? 'Hiciste muchos intentos. Espera una hora e inténtalo de nuevo, o escríbenos por Telegram.'
+            : 'No pudimos revisar tu registro. Revisa tu conexión e inténtalo de nuevo.';
+        });
+    });
+  }
 
   var enviarGoogleForm = function (d) {
     var datos = new URLSearchParams();
@@ -195,14 +242,6 @@
     if (cfg.appsScriptUrl) envios.push(enviarAppsScript(d));
     if (formConfigurado()) envios.push(enviarGoogleForm(d));
 
-    var listo = function () {
-      desbloquear();
-      form.hidden = true;
-      var ok = $('reg-exito');
-      ok.hidden = false;
-      ok.focus();
-    };
-
     boton.disabled = true;
     estado.className = 'form-status';
     estado.textContent = 'Enviando tu registro…';
@@ -210,7 +249,8 @@
     if (!envios.length) envios.push(Promise.reject(new Error('sin destino')));
 
     Promise.all(envios)
-      .then(listo)
+      // Si el correo y el teléfono ya estaban registrados, no se duplica: se avisa y se habilita el acceso
+      .then(function (res) { mostrarExito(res.some(function (j) { return j && j.yaRegistrado; })); })
       .catch(function () {
         // No se confirmó el guardado en Drive: los datos siguen en el formulario para reintentar
         boton.disabled = false;

@@ -183,6 +183,13 @@ La web solo muestra el mensaje de éxito cuando el script confirma que guardó l
 
 La URL `/exec` no cambia, así que no hay que tocar `registro-config.js`.
 
+### Un registro por persona
+
+- **Acceso sin registrarse de nuevo:** quien ya llenó su historia clínica (en la web **o** en el Google Form) entra con su **correo + los últimos 4 dígitos de su teléfono** en el recuadro *"¿Ya te registraste antes en Unitrans?"* de Contacto. Si el script lo encuentra en cualquiera de las dos hojas, la web muestra *"Como ya presentas un registro en Unitrans, puedes ver los precios hormonales y los datos actualizados de los médicos siempre que quieras"* y habilita costos y contactos.
+- **Sin duplicados:** si alguien llena el registro con un correo y un teléfono que ya existen, no se guarda otra fila; recibe el mismo aviso y el acceso.
+- **Mismo correo con otro teléfono:** se guarda, pero queda marcado en la columna *"Posible duplicado"* de "Registros web" para revisarlo a mano. A la persona no se le dice si el correo ya existía.
+- **Privacidad:** la búsqueda ocurre dentro del Apps Script, con acceso privado a las hojas. La web nunca recibe la lista de correos, solo un sí o un no. Se piden los 4 dígitos para que nadie pueda averiguar si un correo ajeno está registrado, y hay un límite de 8 intentos por correo cada hora.
+
 ### Privacidad y límites
 
 - En el navegador solo se guarda que la persona ya se registró y la fecha. Ningún dato personal queda en el dispositivo.
