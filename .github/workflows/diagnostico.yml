@@ -1,0 +1,43 @@
+name: Diagnóstico del registro (temporal, solo lectura)
+
+on:
+  push:
+    branches: [claude/jolly-bell-8tktgj]
+    paths: ['.github/workflows/diagnostico.yml']
+
+jobs:
+  diagnostico:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Estructura del Google Form (sin enviar nada)
+        run: |
+          curl -sL "https://docs.google.com/forms/d/e/1FAIpQLSdtpMTkAnMtqpmvA0tcirgAL3okOtXZBCxzfw0XreKmvx6rZQ/viewform" -o form.html
+          echo "Tamaño: $(wc -c < form.html) bytes"
+          grep -o 'Iniciar sesión\|ServiceLogin\|accounts.google.com/v3/signin' form.html | sort | uniq -c || true
+          node -e '
+            const h = require("fs").readFileSync("form.html", "utf8");
+            const m = h.match(/FB_PUBLIC_LOAD_DATA_ = (\[[\s\S]*?\]);\s*<\/script>/);
+            if (!m) { console.log("No se encontró FB_PUBLIC_LOAD_DATA_"); console.log(h.slice(0, 600)); process.exit(0); }
+            const d = JSON.parse(m[1]);
+            const items = d[1][1];
+            const tipos = {0:"texto corto",1:"párrafo",2:"opción múltiple",3:"desplegable",4:"casillas",5:"escala",8:"SECCIÓN (página)",9:"fecha",10:"hora",11:"imagen",12:"video",13:"archivo"};
+            let pagina = 0;
+            for (const it of items) {
+              const tipo = it[3];
+              if (tipo === 8) pagina++;
+              const preguntas = it[4] || [];
+              for (const q of preguntas) {
+                const opciones = (q[1] || []).map(o => o[0]).join(" | ");
+                console.log(`pág ${pagina} · entry.${q[0]} · ${tipos[tipo]||tipo} · obligatoria=${q[2]===1} · "${it[1]}"` + (opciones ? ` · [${opciones}]` : ""));
+              }
+              if (!preguntas.length) console.log(`pág ${pagina} · ${tipos[tipo]||tipo} · "${it[1]||""}"`);
+            }
+            console.log("Configuración de correo (d[1][10]):", JSON.stringify(d[1][10]));
+            console.log("Páginas totales:", pagina + 1);
+          '
+      - name: Respuesta del Apps Script (GET, sin enviar datos)
+        run: |
+          URL="https://script.google.com/macros/s/AKfycbysoZGK1-EGUh3ndnnRDK7ymok2na6hjAJ5HGHlG8iuzoNd3hQLtjt7XzewLdHjc98gkA/exec"
+          curl -s -o /dev/null -w "Primer salto: HTTP %{http_code} → %{redirect_url}\n" "$URL"
+          curl -sL -o script.html -w "Final: HTTP %{http_code} en %{url_effective}\n" "$URL"
+          sed -e 's/<[^>]*>/ /g' script.html | tr -s ' \n' | head -c 700; echo
