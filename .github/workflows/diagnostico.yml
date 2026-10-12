@@ -9,29 +9,39 @@ jobs:
   diagnostico:
     runs-on: ubuntu-latest
     steps:
-      - name: Variantes de envío al Google Form (se detiene en la primera aceptada)
+      - name: Reglas del formulario y errores del envío
         run: |
           FORM="https://docs.google.com/forms/d/e/1FAIpQLSdtpMTkAnMtqpmvA0tcirgAL3okOtXZBCxzfw0XreKmvx6rZQ"
           curl -s -c jar.txt "$FORM/viewform" -o view.html
-          FBZX=$(grep -o 'name="fbzx" value="[^"]*"' view.html | head -1 | sed 's/.*value="//;s/"//')
-          echo "fbzx: ${FBZX:-(no encontrado)}"
-          echo "Campos ocultos del formulario:"; grep -o '<input type="hidden" name="[^"]*"' view.html | sort -u
-          BASE=( --data-urlencode "entry.1045781291=prueba-web@example.com"
-                 --data-urlencode "entry.2005620554=PRUEBA WEB" --data-urlencode "entry.226430101=BORRAR"
-                 --data-urlencode "entry.345884997=Intersex" --data-urlencode "entry.1013692133=No Binario"
-                 --data-urlencode "entry.1498399976=30" --data-urlencode "entry.1065046570=Prueba"
-                 --data-urlencode "entry.1166974658=0000000000"
-                 --data-urlencode "entry.1060290331=Sólo atención Psicológica" )
-          probar () {
-            nombre="$1"; shift
-            code=$(curl -s -b jar.txt -o r.html -w "%{http_code}" "$@" "${BASE[@]}" "$FORM/formResponse")
-            echo; echo "== $nombre → HTTP $code"
-            # textos de error visibles en la respuesta
-            sed -e 's/<[^>]*>/\n/g' r.html | grep -i 'obligatori\|requerid\|válid\|valid\|correo\|email\|error' | sort -u | head -8
-            [ "$code" = "200" ]
-          }
-          probar "A: con emailAddress" --data-urlencode "emailAddress=prueba-web@example.com" && exit 0
-          probar "B: + pageHistory=0" --data-urlencode "emailAddress=prueba-web@example.com" --data-urlencode "pageHistory=0" && exit 0
-          probar "C: + fbzx y fvv" --data-urlencode "emailAddress=prueba-web@example.com" --data-urlencode "pageHistory=0" --data-urlencode "fvv=1" --data-urlencode "fbzx=$FBZX" && exit 0
-          probar "D: sin emailAddress" --data-urlencode "pageHistory=0" && exit 0
-          echo "Ninguna variante fue aceptada"
+          curl -s -b jar.txt -o r.html -w "ENVIO: HTTP %{http_code}\n" \
+            --data-urlencode "emailAddress=prueba-web@example.com" \
+            --data-urlencode "entry.1045781291=prueba-web@example.com" \
+            --data-urlencode "entry.2005620554=PRUEBA WEB" --data-urlencode "entry.226430101=BORRAR" \
+            --data-urlencode "entry.345884997=Intersex" --data-urlencode "entry.1013692133=No Binario" \
+            --data-urlencode "entry.1498399976=30" --data-urlencode "entry.1065046570=Prueba" \
+            --data-urlencode "entry.1166974658=04140000000" \
+            --data-urlencode "entry.1060290331=Sólo atención Psicológica" \
+            --data-urlencode "pageHistory=0" \
+            "$FORM/formResponse" > envio.txt
+          cat envio.txt
+          node -e '
+            const fs = require("fs");
+            const datos = (f) => { const h = fs.readFileSync(f, "utf8"); const m = h.match(/FB_PUBLIC_LOAD_DATA_ = (\[[\s\S]*?\]);\s*<\/script>/); return m ? JSON.parse(m[1]) : null; };
+            const v = datos("view.html");
+            console.log("REGLAS DE VALIDACIÓN POR PREGUNTA:");
+            for (const it of v[1][1]) for (const q of (it[4] || [])) console.log("  entry." + q[0], "·", JSON.stringify(q[4] ?? null), "·", (it[1] || "").slice(0, 40));
+            console.log("AJUSTES DEL FORMULARIO d[1][10]:", JSON.stringify(v[1][10]), "· d[1][2..9]:", JSON.stringify(v[1].slice(2, 10)).slice(0, 300));
+            const h = fs.readFileSync("r.html", "utf8");
+            const texto = h.replace(/<script[\s\S]*?<\/script>/g, " ").replace(/<style[\s\S]*?<\/style>/g, " ");
+            console.log("ALERTAS EN LA RESPUESTA:");
+            const alertas = [...texto.matchAll(/role="alert"[^>]*>([\s\S]{0,200}?)<\/div>/g)].map(m => m[1].replace(/<[^>]*>/g, "").trim()).filter(Boolean);
+            console.log("  ", alertas.length ? alertas : "(ninguna)");
+            const inval = [...h.matchAll(/aria-invalid="true"[^>]*/g)].map(m => m[0].slice(0, 160));
+            console.log("CAMPOS INVÁLIDOS:", inval.length ? inval : "(ninguno)");
+            const r = datos("r.html");
+            console.log("¿La respuesta trae el formulario de nuevo?:", !!r);
+            const titulo = (h.match(/<title>([^<]*)/) || [])[1];
+            console.log("TÍTULO:", titulo);
+            const cuerpo = texto.replace(/<[^>]*>/g, "\n").split("\n").map(s => s.trim()).filter(s => s && s.length < 160);
+            console.log("PRIMEROS TEXTOS VISIBLES:", JSON.stringify(cuerpo.slice(0, 25)));
+          '
