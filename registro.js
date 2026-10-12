@@ -153,16 +153,19 @@
 
   /* ---------- Destinos ---------- */
   var formConfigurado = function () {
-    return Object.keys(cfg.campos).some(function (k) { return cfg.campos[k]; });
+    return cfg.enviarAlGoogleForm && Object.keys(cfg.campos).some(function (k) { return cfg.campos[k]; });
   };
 
   var enviarAppsScript = function (d) {
-    // text/plain evita la verificación previa (CORS) de Google; no-cors porque Apps Script redirige
+    // text/plain evita la verificación previa (CORS); Apps Script responde {"ok": true} si guardó la fila.
+    // Si la implementación no es pública, Google redirige al inicio de sesión y la petición falla.
     return fetch(cfg.appsScriptUrl, {
-      method: 'POST', mode: 'no-cors',
+      method: 'POST',
       headers: { 'Content-Type': 'text/plain;charset=utf-8' },
       body: JSON.stringify(d)
-    });
+    })
+      .then(function (r) { return r.json(); })
+      .then(function (j) { if (!j || !j.ok) throw new Error((j && j.error) || 'sin confirmación'); });
   };
 
   var enviarGoogleForm = function (d) {
@@ -232,9 +235,16 @@
     Promise.all(envios)
       .then(function () { listo(false); })
       .catch(function () {
+        // No se pudo confirmar el guardado: se ofrece enviarlo por correo para no perder los datos
         boton.disabled = false;
         estado.className = 'form-status is-error';
-        estado.textContent = 'No pudimos enviar tu registro. Revisa tu conexión e inténtalo de nuevo, o escríbenos por Telegram.';
+        estado.textContent = 'No pudimos guardar tu registro en este momento. ';
+        var alt = document.createElement('button');
+        alt.type = 'button';
+        alt.className = 'btn btn-outline';
+        alt.textContent = 'Enviarlo por correo';
+        alt.addEventListener('click', function () { abrirCorreo(d); listo(true); });
+        estado.appendChild(alt);
       });
   });
 

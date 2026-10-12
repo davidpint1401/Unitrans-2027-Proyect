@@ -162,20 +162,26 @@ La página **Contacto** tiene un formulario de registro (`#registro`). Al comple
 | Menores de 18 | Se muestra el Artículo 50 de la LOPNNA y se pregunta si lo conoce (Sí/No). |
 | 18 años o más | Registro individual. |
 
-### A dónde llegan los registros (`registro-config.js`)
+### A dónde llegan los registros
 
-1. **Hoja propia de la Fundación (recomendado).** Guarda todas las respuestas, incluidas la fecha de nacimiento y los datos del representante, y avisa por correo de cada registro nuevo. Para instalarla:
-   1. Con la cuenta de la Fundación, crea una hoja de cálculo nueva en Google Drive.
-   2. Ve a **Extensiones → Apps Script** y pega el contenido de `google-apps-script/Codigo.gs`.
-   3. Pulsa **Implementar → Nueva implementación → Aplicación web**, con *Ejecutar como: Yo* y *Quién tiene acceso: Cualquier usuario*.
-   4. Copia la URL que termina en `/exec` y pégala en `appsScriptUrl`.
-2. **Google Form de historia clínica (opcional, además o en lugar de la hoja).** En el formulario ve a **⋮ → Obtener enlace rellenado previamente**, llena todo, copia el enlace y pon cada número `entry.` en `campos`. Para que Google acepte los envíos desde la web:
-   - el formulario no debe exigir iniciar sesión;
-   - la pregunta de **intervenciones quirúrgicas** no debe ser obligatoria, porque solo aplica a quien elige transición quirúrgica;
-   - la fecha de nacimiento y los datos del representante solo llegan si agregas esas preguntas al formulario.
-3. **Sin ninguno configurado:** al enviar se abre la aplicación de correo de la persona con sus datos, dirigida a `correoRespaldo`. Funciona, pero depende de que la persona pulse *Enviar*.
+La web envía cada registro a un **Google Apps Script** (`google-apps-script/Codigo.gs`) que lo guarda en dos hojas:
 
-Para volver a la web de antes (botón al Google Form y costos visibles), pon `activo: false`.
+1. **"Registros web Unitrans"**, pestaña *Registros web*, con todos los datos: fecha de nacimiento, representante y consentimiento.
+2. **"Formularios de Atención UNITRANS2020 (respuestas)"**, la hoja del Google Form de historia clínica. El registro entra como una fila más en las columnas que ya existen, que se reconocen por su título.
+
+La web solo muestra el mensaje de éxito cuando el script confirma que guardó la fila. Si no puede confirmarlo, ofrece enviar los datos por correo a la Fundación, para que no se pierdan.
+
+> El envío directo al Google Form está desactivado (`enviarAlGoogleForm: false`) porque Google rechaza los envíos que no vienen de su propia página (HTTP 400). Por eso es el script el que escribe en la hoja del formulario.
+
+**Instalar o actualizar el script** (con la cuenta dueña de las dos hojas):
+
+1. Abre "Registros web Unitrans" y ve a **Extensiones → Apps Script**. Pega el contenido de `google-apps-script/Codigo.gs` y guarda.
+2. Ve a **Implementar → Gestionar implementaciones**, pulsa ✏️ y en *Versión* elige **Nueva versión**. Revisa estos dos ajustes:
+   - *Ejecutar como*: **Yo**
+   - *Quién tiene acceso*: **Cualquier usuario**. Si eliges "Cualquier usuario con cuenta de Google", Google pide iniciar sesión y la web no puede guardar.
+3. Pulsa **Implementar** y autoriza los permisos. Google pide acceso a las hojas de cálculo porque el script escribe en las dos.
+
+La URL `/exec` no cambia, así que no hay que tocar `registro-config.js`.
 
 ### Privacidad y límites
 

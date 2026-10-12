@@ -1,7 +1,10 @@
 /**
  * Fundación Unitrans — receptor de registros de la web.
  *
- * Guarda cada registro de la web en una hoja de cálculo de Google de la Fundación.
+ * Guarda cada registro de la web en:
+ *   1. esta hoja de cálculo (pestaña "Registros web", con todos los datos), y
+ *   2. la hoja de respuestas del Google Form de historia clínica (HOJA_FORMULARIO),
+ *      en las columnas que ya tiene, reconocidas por su título.
  *
  * Instalación (una sola vez, con la cuenta de la Fundación):
  *  1. Crea una hoja de cálculo nueva en Google Drive (p. ej. "Registros web Unitrans").
@@ -19,6 +22,10 @@
 
 // Nombre de la pestaña donde se guardan los registros (se crea sola)
 const HOJA = 'Registros web';
+
+// Hoja de respuestas del Google Form de historia clínica ("Formularios de Atención UNITRANS2020 (respuestas)").
+// Vacío = solo se guarda en esta hoja.
+const HOJA_FORMULARIO = '1D2wzkuRvVbkkCw9Oyb7oaJ92Kq66vQkLrZvcAGy7bwU';
 
 // Correo que recibe un aviso por cada registro nuevo (sin datos de salud). Vacío = sin aviso.
 const CORREO_AVISO = 'fundaunitrans2020@gmail.com';
@@ -70,6 +77,16 @@ function doPost(e) {
       return c[0] === 'fechaRegistro' ? new Date() : limpiar(datos[c[0]]);
     }));
 
+    // Copia en la hoja de respuestas del formulario de historia clínica
+    let copiaFormulario = 'sin configurar';
+    if (HOJA_FORMULARIO) {
+      try {
+        copiaFormulario = guardarEnHojaDelFormulario(datos);
+      } catch (err) {
+        copiaFormulario = 'error: ' + err;
+      }
+    }
+
     if (CORREO_AVISO) {
       MailApp.sendEmail({
         to: CORREO_AVISO,
@@ -78,12 +95,56 @@ function doPost(e) {
           'Revísalo en la hoja "' + HOJA + '":\n' + libro.getUrl(),
       });
     }
-    return respuesta({ ok: true });
+    return respuesta({ ok: true, hojaFormulario: copiaFormulario });
   } catch (err) {
     return respuesta({ ok: false, error: String(err) });
   } finally {
     lock.releaseLock();
   }
+}
+
+// Columnas de la hoja del formulario → dato de la web. Se reconocen por el título (sin tildes ni mayúsculas);
+// la primera regla que coincide gana. Las columnas que no coinciden quedan vacías.
+const REGLAS_FORMULARIO = [
+  [/marca temporal|timestamp/, 'fechaRegistro'],
+  [/direccion de correo/, 'correo'],
+  [/correo/, 'correo'],
+  [/apellido/, 'apellidos'],
+  [/nombre/, 'nombre'],
+  [/sexo/, 'sexoAsignado'],
+  [/identidad/, 'identidad'],
+  [/lopnna/, 'lopnna'],
+  [/fecha de nacimiento/, 'fechaNacimiento'],
+  [/edad/, 'edad'],
+  [/estado/, 'estado'],
+  [/telefono/, 'telefono'],
+  [/expectativa/, 'expectativas'],
+  [/intervenci/, 'intervenciones'],
+];
+
+function normalizar(texto) {
+  return String(texto).toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '').trim();
+}
+
+function guardarEnHojaDelFormulario(datos) {
+  const libro = SpreadsheetApp.openById(HOJA_FORMULARIO);
+  // La pestaña de respuestas es la que tiene "Marca temporal" y "Apellidos" en la primera fila
+  const hoja = libro.getSheets().find(function (h) {
+    if (h.getLastColumn() === 0) return false;
+    const titulos = h.getRange(1, 1, 1, h.getLastColumn()).getValues()[0].map(normalizar).join('|');
+    return /marca temporal|timestamp/.test(titulos) && /apellido/.test(titulos);
+  });
+  if (!hoja) return 'no se encontró la pestaña de respuestas';
+
+  const titulos = hoja.getRange(1, 1, 1, hoja.getLastColumn()).getValues()[0];
+  const fila = titulos.map(function (titulo) {
+    const t = normalizar(titulo);
+    const regla = REGLAS_FORMULARIO.find(function (r) { return r[0].test(t); });
+    if (!regla) return '';
+    return regla[1] === 'fechaRegistro' ? new Date() : limpiar(datos[regla[1]]);
+  });
+  hoja.appendRow(fila);
+  return 'ok';
 }
 
 // Texto plano, máximo 500 caracteres, y sin fórmulas (evita que una respuesta como "=..." se ejecute en la hoja)

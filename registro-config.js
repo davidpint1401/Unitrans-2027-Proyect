@@ -4,8 +4,8 @@
  * A dónde van los registros (puede ser a uno o a los dos):
  *   A. appsScriptUrl → hoja de cálculo propia de la Fundación (recomendado: guarda TODOS los datos).
  *      Ver google-apps-script/Codigo.gs para instalarlo.
- *   B. Google Form de historia clínica → completa los códigos entry.XXXX en `campos`
- *      (en el formulario: ⋮ → "Obtener enlace rellenado previamente").
+ *      El Apps Script también copia el registro en la hoja de respuestas del Google Form.
+ *   B. Envío directo al Google Form (enviarAlGoogleForm): hoy Google lo rechaza; queda desactivado.
  * Si no hay ninguno configurado, al enviar se prepara un correo a la Fundación con los datos.
  *
  * Ver README → "Registro de pacientes".
@@ -17,7 +17,9 @@ window.UNITRANS_REGISTRO = {
   // A. URL de la aplicación web de Apps Script (termina en /exec)
   appsScriptUrl: 'https://script.google.com/macros/s/AKfycbysoZGK1-EGUh3ndnnRDK7ymok2na6hjAJ5HGHlG8iuzoNd3hQLtjt7XzewLdHjc98gkA/exec',
 
-  // B. Google Form de historia clínica
+  // B. Google Form de historia clínica. Desactivado: el formulario rechaza los envíos externos (HTTP 400),
+  // así que el Apps Script copia cada registro en su hoja de respuestas (HOJA_FORMULARIO en Codigo.gs).
+  enviarAlGoogleForm: false,
   formAction: 'https://docs.google.com/forms/d/e/1FAIpQLSdtpMTkAnMtqpmvA0tcirgAL3okOtXZBCxzfw0XreKmvx6rZQ/formResponse',
   pageHistory: '',            // si el formulario tiene secciones: '0,1,2'
   campos: {                   // entry.XXXX de cada pregunta; vacío = no se envía
