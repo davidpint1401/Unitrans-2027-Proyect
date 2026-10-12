@@ -22,6 +22,14 @@
   </script>
   <script defer src="/_vercel/insights/script.js"></script>
   <script defer src="/_vercel/speed-insights/script.js"></script>
+  <script src="registro-config.js"></script>
+  <script>
+    (function () {
+      var c = window.UNITRANS_REGISTRO, r = null;
+      try { r = localStorage.getItem('unitrans-registro'); } catch (e) {}
+      if (c && c.activo && !r) document.documentElement.classList.add('reg-locked');
+    })();
+  </script>
 </head>
 <body>
   <a class="skip-link" href="#main">Saltar al contenido</a>
@@ -365,7 +373,7 @@
         <div class="cta">
           <h2 id="cta-title">No tienes que tener todas las respuestas</h2>
           <p>Empezar es tan simple como contarnos un poco de ti. El primer paso es la historia clínica; desde ahí te acompañamos.</p>
-          <a class="btn btn-primary" href="https://docs.google.com/forms/d/e/1FAIpQLSdtpMTkAnMtqpmvA0tcirgAL3okOtXZBCxzfw0XreKmvx6rZQ/viewform" target="_blank" rel="noopener">Quiero empezar mi historia clínica <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M14 4h6v6M20 4l-9 9"/><path d="M18 14v4a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4"/></svg><span class="visually-hidden">(se abre en una pestaña nueva)</span></a>
+          <a class="btn btn-primary" href="https://docs.google.com/forms/d/e/1FAIpQLSdtpMTkAnMtqpmvA0tcirgAL3okOtXZBCxzfw0XreKmvx6rZQ/viewform" target="_blank" rel="noopener" data-hc-link="contacto.html#registro">Quiero empezar mi historia clínica <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M14 4h6v6M20 4l-9 9"/><path d="M18 14v4a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4"/></svg><span class="visually-hidden">(se abre en una pestaña nueva)</span></a>
         </div>
       </div>
     </section>
@@ -402,6 +410,7 @@
     </div>
   </footer>
 
+  <script src="registro.js" defer></script>
   <script src="main.js" defer></script>
 </body>
 </html>

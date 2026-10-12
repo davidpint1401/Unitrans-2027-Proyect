@@ -22,6 +22,14 @@
   </script>
   <script defer src="/_vercel/insights/script.js"></script>
   <script defer src="/_vercel/speed-insights/script.js"></script>
+  <script src="registro-config.js"></script>
+  <script>
+    (function () {
+      var c = window.UNITRANS_REGISTRO, r = null;
+      try { r = localStorage.getItem('unitrans-registro'); } catch (e) {}
+      if (c && c.activo && !r) document.documentElement.classList.add('reg-locked');
+    })();
+  </script>
 </head>
 <body>
   <a class="skip-link" href="#main">Saltar al contenido</a>
@@ -61,8 +69,149 @@
             <p class="muted" style="margin-top:12px">Es el primer paso obligatorio para entrar a la red de acompañamiento. Nos ayuda a tener toda la información necesaria y a orientarte hacia la persona especialista adecuada.</p>
           </div>
           <div>
-            <a class="btn btn-primary btn-block" href="https://docs.google.com/forms/d/e/1FAIpQLSdtpMTkAnMtqpmvA0tcirgAL3okOtXZBCxzfw0XreKmvx6rZQ/viewform" target="_blank" rel="noopener">Quiero empezar mi historia clínica <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M14 4h6v6M20 4l-9 9"/><path d="M18 14v4a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4"/></svg><span class="visually-hidden">(se abre en una pestaña nueva)</span></a>
-            <p class="feature-box__privacy" style="margin-top:16px"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M12 3 4.5 6v6c0 4.5 3.2 7.8 7.5 9 4.3-1.2 7.5-4.5 7.5-9V6z"/><path d="m9 12 2 2 4-4"/></svg><span>El formulario se abre en Google Forms. Tus respuestas se usan solo para orientarte dentro de la red; comparte solo lo que quieras compartir.</span></p>
+            <a class="btn btn-primary btn-block" href="https://docs.google.com/forms/d/e/1FAIpQLSdtpMTkAnMtqpmvA0tcirgAL3okOtXZBCxzfw0XreKmvx6rZQ/viewform" target="_blank" rel="noopener" data-hc-link="#registro">Quiero empezar mi historia clínica <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M14 4h6v6M20 4l-9 9"/><path d="M18 14v4a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4"/></svg><span class="visually-hidden">(se abre en una pestaña nueva)</span></a>
+            <p class="feature-box__privacy" style="margin-top:16px" data-registro-oculto><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M12 3 4.5 6v6c0 4.5 3.2 7.8 7.5 9 4.3-1.2 7.5-4.5 7.5-9V6z"/><path d="m9 12 2 2 4-4"/></svg><span>El formulario se abre en Google Forms. Tus respuestas se usan solo para orientarte dentro de la red; comparte solo lo que quieras compartir.</span></p>
+            <p class="feature-box__privacy" style="margin-top:16px" data-registro-visible hidden><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M12 3 4.5 6v6c0 4.5 3.2 7.8 7.5 9 4.3-1.2 7.5-4.5 7.5-9V6z"/><path d="m9 12 2 2 4-4"/></svg><span>Al registrarte se habilitan los costos y contactos de especialistas y los precios de las hormonas. Tus datos son confidenciales.</span></p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+
+    <section class="section" id="registro" aria-labelledby="reg-title" data-registro-visible hidden>
+      <div class="container">
+        <div class="section__head">
+          <span class="eyebrow">Registro</span>
+          <h2 id="reg-title">Cuéntanos de ti</h2>
+          <p>Con este registro empezamos tu historia clínica y se habilitan los costos y contactos de especialistas y los precios de las hormonas. Toma unos 3 minutos.</p>
+        </div>
+
+        <p class="notice notice--info" id="reg-ya-registrado" hidden><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="m5 12 5 5 9-10"/></svg><span>Ya te registraste desde este dispositivo. Si necesitas actualizar tus datos, puedes enviar el formulario de nuevo.</span></p>
+
+        <form class="reg-form card" id="form-registro" novalidate>
+          <fieldset>
+            <legend>Tu edad</legend>
+            <div class="field field--short">
+              <label for="reg-edad">¿Qué edad tienes? <span class="req" aria-hidden="true">*</span></label>
+              <input id="reg-edad" name="edad" type="number" inputmode="numeric" min="1" max="99" required>
+            </div>
+
+            <div class="notice notice--info" id="reg-aviso-menor14" hidden>
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><circle cx="9" cy="8" r="3.5"/><path d="M2.5 20a6.5 6.5 0 0 1 13 0"/><path d="M16 4.5a3.5 3.5 0 0 1 0 7"/><path d="M18 14.5a6.5 6.5 0 0 1 3.5 5.5"/></svg>
+              <p><strong>Te registras junto a tu madre, padre o representante.</strong> Por ser menor de 14 años, una persona adulta responsable te acompaña en este registro y en tus consultas. Pídele que complete contigo la sección del representante.</p>
+            </div>
+
+            <div id="reg-bloque-adolescente" hidden>
+              <p class="field-label" id="reg-acomp-label">¿Quieres que tu madre, padre o representante te acompañe en este proceso? <span class="req" aria-hidden="true">*</span></p>
+              <div class="choice-group" role="radiogroup" aria-labelledby="reg-acomp-label">
+                <label class="check"><input type="radio" name="acompanamiento" value="si" required><span>Sí, quiero que me acompañe</span></label>
+                <label class="check"><input type="radio" name="acompanamiento" value="no" required><span>No, prefiero hacerlo por mi cuenta</span></label>
+              </div>
+            </div>
+
+            <div class="notice notice--info" id="reg-bloque-lopnna" hidden>
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M12 3 4.5 6v6c0 4.5 3.2 7.8 7.5 9 4.3-1.2 7.5-4.5 7.5-9V6z"/><path d="m9 12 2 2 4-4"/></svg>
+              <div>
+                <p><strong>Tienes derecho a pedir información por tu cuenta.</strong> El Artículo 50 de la LOPNNA reconoce que las y los adolescentes de 14 años o más pueden solicitar por sí mismos información y servicios de salud sexual y reproductiva, de forma confidencial.</p>
+                <label class="check" style="margin-top:10px"><input type="checkbox" id="reg-lopnna" required><span>Conozco el Artículo 50 de la LOPNNA <span class="req" aria-hidden="true">*</span></span></label>
+              </div>
+            </div>
+          </fieldset>
+
+          <fieldset id="reg-bloque-representante" hidden>
+            <legend>Datos de tu representante</legend>
+            <div class="field-grid">
+              <div class="field">
+                <label for="reg-rep-nombre">Nombre y apellido <span class="req" aria-hidden="true">*</span></label>
+                <input id="reg-rep-nombre" type="text" autocomplete="off" required>
+              </div>
+              <div class="field">
+                <label for="reg-rep-parentesco">Parentesco <span class="req" aria-hidden="true">*</span></label>
+                <select id="reg-rep-parentesco" required><option value="">Elige una opción</option></select>
+              </div>
+              <div class="field">
+                <label for="reg-rep-cedula">Cédula de identidad <span class="req" aria-hidden="true">*</span></label>
+                <input id="reg-rep-cedula" type="text" inputmode="numeric" placeholder="V-12345678" required>
+              </div>
+              <div class="field">
+                <label for="reg-rep-telefono">Teléfono <span class="req" aria-hidden="true">*</span></label>
+                <input id="reg-rep-telefono" type="tel" autocomplete="off" placeholder="0412 1234567" pattern="[+0-9 ()-]{10,}" required>
+              </div>
+              <div class="field field--wide">
+                <label for="reg-rep-correo">Correo electrónico</label>
+                <input id="reg-rep-correo" type="email" autocomplete="off">
+              </div>
+            </div>
+            <label class="check"><input type="checkbox" id="reg-rep-autoriza" required><span>Como representante, acompaño y autorizo este registro <span class="req" aria-hidden="true">*</span></span></label>
+          </fieldset>
+
+          <fieldset>
+            <legend>Sobre ti</legend>
+            <div class="field-grid">
+              <div class="field">
+                <label for="reg-nombre">Nombre con el que te identificas <span class="req" aria-hidden="true">*</span></label>
+                <input id="reg-nombre" type="text" autocomplete="given-name" required>
+              </div>
+              <div class="field">
+                <label for="reg-apellidos">Apellidos <span class="req" aria-hidden="true">*</span></label>
+                <input id="reg-apellidos" type="text" autocomplete="family-name" required>
+              </div>
+              <div class="field">
+                <label for="reg-identidad">Identidad de género <span class="req" aria-hidden="true">*</span></label>
+                <select id="reg-identidad" required><option value="">Elige una opción</option></select>
+              </div>
+              <div class="field">
+                <label for="reg-sexo">Sexo asignado al nacer <span class="req" aria-hidden="true">*</span></label>
+                <select id="reg-sexo" required><option value="">Elige una opción</option></select>
+              </div>
+              <div class="field field--wide" id="reg-bloque-identidad-otra" hidden>
+                <label for="reg-identidad-otra">Escribe tu identidad de género <span class="req" aria-hidden="true">*</span></label>
+                <input id="reg-identidad-otra" type="text" required>
+              </div>
+              <div class="field">
+                <label for="reg-estado">Estado donde vives <span class="req" aria-hidden="true">*</span></label>
+                <select id="reg-estado" required><option value="">Elige una opción</option></select>
+              </div>
+              <div class="field">
+                <label for="reg-telefono">Teléfono (WhatsApp o Telegram) <span class="req" aria-hidden="true">*</span></label>
+                <input id="reg-telefono" type="tel" autocomplete="tel" placeholder="0412 1234567" pattern="[+0-9 ()-]{10,}" required>
+              </div>
+              <div class="field field--wide">
+                <label for="reg-correo">Correo electrónico <span class="req" aria-hidden="true">*</span></label>
+                <input id="reg-correo" type="email" autocomplete="email" required aria-describedby="reg-correo-ayuda">
+                <p class="field-help" id="reg-correo-ayuda" hidden>Puede ser el correo de tu representante.</p>
+              </div>
+            </div>
+          </fieldset>
+
+          <fieldset>
+            <legend>Tu acompañamiento</legend>
+            <p class="field-label">¿Qué tipo de atención buscas? <span class="req" aria-hidden="true">*</span> <span class="field-help">Puedes elegir varias.</span></p>
+            <div class="choice-group choice-group--grid" id="reg-expectativas"></div>
+            <div class="field field--wide" id="reg-bloque-intervenciones" hidden>
+              <label for="reg-intervenciones">¿Qué intervenciones quirúrgicas te interesan?</label>
+              <textarea id="reg-intervenciones" rows="3" placeholder="Por ejemplo: mastectomía, vaginoplastia… Si aún no lo sabes, puedes dejarlo en blanco."></textarea>
+            </div>
+          </fieldset>
+
+          <div class="reg-consent">
+            <label class="check"><input type="checkbox" id="reg-consentimiento" required><span>Acepto que la Fundación Unitrans use estos datos de forma confidencial, solo para mi historia clínica y para orientarme dentro de la red de acompañamiento. <span class="req" aria-hidden="true">*</span></span></label>
+            <p class="field-help">Tus respuestas llegan directamente al registro de historias clínicas de la Fundación. No las compartimos con terceros sin tu permiso.</p>
+          </div>
+
+          <div class="reg-actions">
+            <button class="btn btn-primary" type="submit">Enviar mi registro <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M5 12h14M13 6l6 6-6 6"/></svg></button>
+            <p class="form-status" id="reg-estado-envio" role="status" aria-live="polite"></p>
+          </div>
+        </form>
+
+        <div class="reg-success card" id="reg-exito" tabindex="-1" hidden>
+          <span class="card__icon card__icon--green"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M12 20s-7-4.35-7-10a4 4 0 0 1 7-2.65A4 4 0 0 1 19 10c0 5.65-7 10-7 10z"/></svg></span>
+          <h3>¡Gracias! Ya empezamos tu historia clínica</h3>
+          <p>Recibimos tu registro. Ahora puedes ver los costos y contactos de cada especialista y los precios de las hormonas. Te escribiremos al correo o teléfono que nos diste.</p>
+          <div class="hero__actions">
+            <a class="btn btn-primary" href="acompanamiento.html#especialistas">Ver especialistas</a>
+            <a class="btn btn-outline" href="acompanamiento.html#hormonas">Ver precios de hormonas</a>
           </div>
         </div>
       </div>
@@ -222,6 +371,7 @@
     </div>
   </footer>
 
+  <script src="registro.js" defer></script>
   <script src="main.js" defer></script>
 </body>
 </html>
