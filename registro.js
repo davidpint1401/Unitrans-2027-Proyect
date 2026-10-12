@@ -5,8 +5,8 @@
  *     · 14 a 17 años: elige si quiere ir acompañada/o; los datos del representante
  *       se piden solo si responde que sí;
  *     · menores de 18: pregunta del Artículo 50 de la LOPNNA.
- * - Envía el registro a la hoja propia (Apps Script) y/o al Google Form (registro-config.js).
- *   Si ninguno está configurado, prepara un correo a la Fundación con los datos.
+ * - Envía el registro al Apps Script de la Fundación, que lo guarda en Google Drive
+ *   (hoja "Registros web Unitrans" y hoja de respuestas del Google Form).
  * - Mientras la persona no se registra, oculta costos y contactos ([data-privado]).
  *   En el navegador solo se guarda que ya se registró y la fecha; ningún dato personal.
  */
@@ -179,25 +179,6 @@
     return fetch(cfg.formAction, { method: 'POST', mode: 'no-cors', body: datos });
   };
 
-  var TITULOS = {
-    nombre: 'Nombre', apellidos: 'Apellidos', fechaNacimiento: 'Fecha de nacimiento', edad: 'Edad',
-    sexoAsignado: 'Sexo asignado al nacer', identidad: 'Identidad de género', estado: 'Estado',
-    telefono: 'Teléfono', correo: 'Correo', expectativas: 'Expectativas de atención',
-    intervenciones: 'Intervenciones de interés', lopnna: 'Conoce el Art. 50 LOPNNA',
-    acompanamiento: 'Acompañamiento', representanteNombre: 'Representante',
-    representanteParentesco: 'Parentesco', representanteCedula: 'Cédula del representante',
-    representanteTelefono: 'Teléfono del representante', representanteCorreo: 'Correo del representante',
-    representanteAutoriza: 'Representante autoriza', consentimiento: 'Consentimiento'
-  };
-  var abrirCorreo = function (d) {
-    var cuerpo = 'Hola, quiero registrarme en la Fundación Unitrans.\n\n' +
-      Object.keys(TITULOS).filter(function (k) { return d[k]; })
-        .map(function (k) { return TITULOS[k] + ': ' + d[k]; }).join('\n');
-    window.location.href = 'mailto:' + cfg.correoRespaldo +
-      '?subject=' + encodeURIComponent('Registro web: ' + d.nombre + ' ' + d.apellidos) +
-      '&body=' + encodeURIComponent(cuerpo);
-  };
-
   /* ---------- Envío ---------- */
   var estado = $('reg-estado-envio');
   var boton = form.querySelector('button[type="submit"]');
@@ -214,37 +195,27 @@
     if (cfg.appsScriptUrl) envios.push(enviarAppsScript(d));
     if (formConfigurado()) envios.push(enviarGoogleForm(d));
 
-    var listo = function (porCorreo) {
+    var listo = function () {
       desbloquear();
       form.hidden = true;
-      $('reg-exito-correo').hidden = !porCorreo;
       var ok = $('reg-exito');
       ok.hidden = false;
       ok.focus();
     };
 
-    if (!envios.length) {
-      abrirCorreo(d);
-      listo(true);
-      return;
-    }
-
     boton.disabled = true;
     estado.className = 'form-status';
     estado.textContent = 'Enviando tu registro…';
+    // Sin destino configurado no se puede guardar: se informa como error
+    if (!envios.length) envios.push(Promise.reject(new Error('sin destino')));
+
     Promise.all(envios)
-      .then(function () { listo(false); })
+      .then(listo)
       .catch(function () {
-        // No se pudo confirmar el guardado: se ofrece enviarlo por correo para no perder los datos
+        // No se confirmó el guardado en Drive: los datos siguen en el formulario para reintentar
         boton.disabled = false;
         estado.className = 'form-status is-error';
-        estado.textContent = 'No pudimos guardar tu registro en este momento. ';
-        var alt = document.createElement('button');
-        alt.type = 'button';
-        alt.className = 'btn btn-outline';
-        alt.textContent = 'Enviarlo por correo';
-        alt.addEventListener('click', function () { abrirCorreo(d); listo(true); });
-        estado.appendChild(alt);
+        estado.textContent = 'No pudimos guardar tu registro. Revisa tu conexión e inténtalo de nuevo en unos minutos.';
       });
   });
 

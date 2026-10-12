@@ -6,7 +6,6 @@
  *      Ver google-apps-script/Codigo.gs para instalarlo.
  *      El Apps Script también copia el registro en la hoja de respuestas del Google Form.
  *   B. Envío directo al Google Form (enviarAlGoogleForm): hoy Google lo rechaza; queda desactivado.
- * Si no hay ninguno configurado, al enviar se prepara un correo a la Fundación con los datos.
  *
  * Ver README → "Registro de pacientes".
  */
@@ -45,8 +44,6 @@ window.UNITRANS_REGISTRO = {
     representanteCorreo: ''
   },
 
-  // Correo que recibe los datos si no hay A ni B configurados
-  correoRespaldo: 'fundaunitrans2020@gmail.com',
 
   // Opciones: idénticas a las del Google Form de historia clínica
   opciones: {

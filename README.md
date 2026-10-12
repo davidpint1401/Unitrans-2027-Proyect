@@ -169,7 +169,7 @@ La web envía cada registro a un **Google Apps Script** (`google-apps-script/Cod
 1. **"Registros web Unitrans"**, pestaña *Registros web*, con todos los datos: fecha de nacimiento, representante y consentimiento.
 2. **"Formularios de Atención UNITRANS2020 (respuestas)"**, la hoja del Google Form de historia clínica. El registro entra como una fila más en las columnas que ya existen, que se reconocen por su título.
 
-La web solo muestra el mensaje de éxito cuando el script confirma que guardó la fila. Si no puede confirmarlo, ofrece enviar los datos por correo a la Fundación, para que no se pierdan.
+La web solo muestra el mensaje de éxito cuando el script confirma que guardó la fila. Si no puede confirmarlo, avisa a la persona para que lo intente de nuevo; sus datos siguen en el formulario.
 
 > El envío directo al Google Form está desactivado (`enviarAlGoogleForm: false`) porque Google rechaza los envíos que no vienen de su propia página (HTTP 400). Por eso es el script el que escribe en la hoja del formulario.
 
@@ -177,8 +177,8 @@ La web solo muestra el mensaje de éxito cuando el script confirma que guardó l
 
 1. Abre "Registros web Unitrans" y ve a **Extensiones → Apps Script**. Pega el contenido de `google-apps-script/Codigo.gs` y guarda.
 2. Ve a **Implementar → Gestionar implementaciones**, pulsa ✏️ y en *Versión* elige **Nueva versión**. Revisa estos dos ajustes:
-   - *Ejecutar como*: **Yo**
-   - *Quién tiene acceso*: **Cualquier usuario**. Si eliges "Cualquier usuario con cuenta de Google", Google pide iniciar sesión y la web no puede guardar.
+   - *Ejecutar como*: **Yo**. Si eliges "Usuario que accede a la aplicación web", Google pide iniciar sesión.
+   - *Quién tiene acceso*: **Cualquier usuario**. Esta opción solo aparece después de elegir *Ejecutar como: Yo*. Si eliges "Cualquier usuario con una cuenta de Google", Google pide iniciar sesión y la web no puede guardar.
 3. Pulsa **Implementar** y autoriza los permisos. Google pide acceso a las hojas de cálculo porque el script escribe en las dos.
 
 La URL `/exec` no cambia, así que no hay que tocar `registro-config.js`.
