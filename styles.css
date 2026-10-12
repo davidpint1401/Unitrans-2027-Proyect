@@ -84,6 +84,8 @@ ul[class], ol[class] { list-style: none; padding: 0; }
   *, *::before, *::after { transition: none !important; animation: none !important; }
 }
 
+[hidden] { display: none !important; }
+
 .visually-hidden {
   position: absolute !important;
   width: 1px; height: 1px;
@@ -652,6 +654,87 @@ a.card:hover { transform: translateY(-3px); box-shadow: var(--shadow); }
   max-width: 100%;
 }
 
+/* ---------- 16c. Registro de pacientes ---------- */
+/* Sin registro: se ocultan costos y contactos ([data-privado]) y se muestra la invitación ([data-candado]) */
+.reg-locked [data-privado] { display: none !important; }
+html:not(.reg-locked) [data-candado] { display: none !important; }
+
+.lock-note {
+  display: flex; gap: 8px; align-items: flex-start;
+  width: 100%;
+  padding: 12px 14px;
+  font-size: 0.9375rem;
+  color: var(--text);
+  background: var(--bg-soft);
+  border-radius: var(--radius-sm);
+}
+.lock-note svg { width: 18px; height: 18px; flex-shrink: 0; margin-top: 3px; color: var(--brand-blue-dark); }
+.lock-box {
+  display: flex; gap: 14px; align-items: flex-start;
+  padding: 20px;
+  background: var(--bg-soft);
+  border: 1px dashed var(--brand-blue);
+  border-radius: var(--radius);
+}
+.lock-box strong { font-family: var(--font-title); }
+.lock-box p { margin: 4px 0 14px; color: var(--text-muted); }
+.lock-box .card__icon { margin: 0; flex-shrink: 0; }
+
+.reg-form { gap: 0; padding: 28px 22px; }
+.reg-form fieldset { margin: 0 0 8px; padding: 0 0 24px; border: 0; border-bottom: 1px solid var(--border); }
+.reg-form fieldset + fieldset, .reg-form fieldset + .reg-consent { padding-top: 20px; }
+.reg-form legend {
+  float: left; width: 100%;
+  margin-bottom: 16px; padding: 0;
+  font-family: var(--font-title); font-size: 1.2rem; font-weight: 700; color: var(--text);
+}
+.reg-form legend + * { clear: both; }
+.field-grid { display: grid; gap: 16px; }
+.field { display: grid; gap: 6px; }
+.field--short { max-width: 160px; }
+.field label, .field-label { font-weight: 600; color: var(--text); }
+.field-label { margin: 16px 0 10px; }
+.req { color: #B23A57; }
+.field-help { font-size: 0.875rem; color: var(--text-muted); font-weight: 400; }
+.reg-form input[type="text"], .reg-form input[type="email"], .reg-form input[type="tel"],
+.reg-form input[type="number"], .reg-form select, .reg-form textarea {
+  width: 100%;
+  min-height: 48px;
+  padding: 10px 14px;
+  font: inherit;
+  color: var(--text);
+  background: #fff;
+  border: 1.5px solid #CFC8DC;
+  border-radius: 14px;
+  transition: border-color var(--transition), box-shadow var(--transition);
+}
+.reg-form textarea { resize: vertical; }
+.reg-form input:focus, .reg-form select:focus, .reg-form textarea:focus {
+  outline: none;
+  border-color: var(--brand-blue);
+  box-shadow: 0 0 0 3px rgba(103, 105, 190, 0.2);
+}
+.reg-form input:user-invalid, .reg-form select:user-invalid { border-color: #B23A57; }
+.choice-group { display: grid; gap: 10px; }
+.check { display: flex; gap: 10px; align-items: flex-start; cursor: pointer; color: var(--text); }
+.check input { width: 20px; height: 20px; margin: 2px 0 0; flex-shrink: 0; accent-color: var(--brand-blue); }
+.choice-group .check {
+  padding: 12px 14px;
+  background: #fff;
+  border: 1.5px solid var(--border);
+  border-radius: 14px;
+}
+.choice-group .check:has(input:checked) { border-color: var(--brand-blue); background: var(--bg-soft); }
+.reg-form .notice { margin-top: 16px; }
+.reg-form .notice p + label { margin-top: 10px; }
+.reg-consent { display: grid; gap: 8px; padding-top: 20px; }
+.reg-actions { display: flex; flex-wrap: wrap; align-items: center; gap: 16px; margin-top: 24px; }
+.form-status { color: var(--text-muted); }
+.form-status.is-error { color: #B23A57; font-weight: 600; }
+.reg-success { align-items: flex-start; padding: 32px 28px; }
+.reg-success:focus { outline: none; }
+#reg-ya-registrado { margin-bottom: 20px; }
+
 /* ---------- 17. CTA final ---------- */
 .cta {
   padding: 48px 28px;
@@ -722,6 +805,9 @@ a.card:hover { transform: translateY(-3px); box-shadow: var(--shadow); }
   .mv { grid-template-columns: repeat(2, 1fr); }
   .timeline--preview { grid-template-columns: repeat(2, 1fr); }
   .feature-box { padding: 48px; }
+  .field-grid { grid-template-columns: 1fr 1fr; }
+  .field--wide { grid-column: 1 / -1; }
+  .choice-group--grid { grid-template-columns: 1fr 1fr; }
   .cta { padding: 64px 48px; }
   .footer__grid { grid-template-columns: 1.4fr 1fr 1fr; }
 }
@@ -761,4 +847,5 @@ a.card:hover { transform: translateY(-3px); box-shadow: var(--shadow); }
   .feature-box { grid-template-columns: 1.3fr 1fr; align-items: center; padding: 56px; }
   .advisory { grid-template-columns: 1fr 1fr; gap: 48px; }
   .hrt { grid-template-columns: 1fr 1fr; }
+  .reg-form { padding: 40px; }
 }

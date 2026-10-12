@@ -15,6 +15,21 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Comfortaa:wght@400;700&amp;family=Inter:wght@400;500;600&amp;display=swap" rel="stylesheet">
   <link rel="stylesheet" href="styles.css">
+  <!-- Vercel Web Analytics y Speed Insights (sin cookies; se activan en el panel de Vercel) -->
+  <script>
+    window.va = window.va || function () { (window.vaq = window.vaq || []).push(arguments); };
+    window.si = window.si || function () { (window.siq = window.siq || []).push(arguments); };
+  </script>
+  <script defer src="/_vercel/insights/script.js"></script>
+  <script defer src="/_vercel/speed-insights/script.js"></script>
+  <script src="registro-config.js"></script>
+  <script>
+    (function () {
+      var c = window.UNITRANS_REGISTRO, r = null;
+      try { r = localStorage.getItem('unitrans-registro'); } catch (e) {}
+      if (c && c.activo && !r) document.documentElement.classList.add('reg-locked');
+    })();
+  </script>
 </head>
 <body>
   <a class="skip-link" href="#main">Saltar al contenido</a>
@@ -104,7 +119,8 @@
             <dl class="service-meta">
               <div><dt>Especialista</dt><dd>David Pinto</dd></div>
               <div><dt>Modalidad</dt><dd>Online</dd></div>
-              <div><dt>Costo</dt><dd>Consultar por Telegram</dd></div>
+              <div data-privado><dt>Costo</dt><dd>Consultar por Telegram</dd></div>
+              <div data-candado><dt>Costo</dt><dd><a href="contacto.html#registro">Regístrate para verlo</a></dd></div>
             </dl>
             <a class="btn btn-outline" href="https://t.me/FundacionUnitransOf" target="_blank" rel="noopener"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M21 4 3 11l6 2.5L11.5 20l3-4.5L19 19z"/><path d="m9 13.5 7-5.5"/></svg>Escribir por Telegram<span class="visually-hidden"> (se abre en una pestaña nueva)</span></a>
           </article>
@@ -115,7 +131,8 @@
             <dl class="service-meta">
               <div><dt>Especialista</dt><dd>Lic. Camila Khatcherian</dd></div>
               <div><dt>Modalidad</dt><dd>Online</dd></div>
-              <div><dt>Costo</dt><dd>$15</dd></div>
+              <div data-privado><dt>Costo</dt><dd>$15</dd></div>
+              <div data-candado><dt>Costo</dt><dd><a href="contacto.html#registro">Regístrate para verlo</a></dd></div>
             </dl>
             <a class="btn btn-outline" href="#especialistas">Ver detalles<span class="visually-hidden"> de psicología</span></a>
           </article>
@@ -126,7 +143,8 @@
             <dl class="service-meta">
               <div><dt>Especialista</dt><dd>Dra. Teresa Rossamando · Dra. Dora Millar · Dr. Freddy Salazar</dd></div>
               <div><dt>Modalidad</dt><dd>Presencial y online (según especialista)</dd></div>
-              <div><dt>Costo</dt><dd>$30 – $60 · consulta pública disponible</dd></div>
+              <div data-privado><dt>Costo</dt><dd>$30 – $60 · consulta pública disponible</dd></div>
+              <div data-candado><dt>Costo</dt><dd><a href="contacto.html#registro">Regístrate para verlo</a></dd></div>
             </dl>
             <a class="btn btn-outline" href="#hormonas">Ver detalles<span class="visually-hidden"> de terapia hormonal</span></a>
           </article>
@@ -137,7 +155,8 @@
             <dl class="service-meta">
               <div><dt>Especialista</dt><dd>Dra. Fabiola Galviz</dd></div>
               <div><dt>Modalidad</dt><dd>Online o presencial</dd></div>
-              <div><dt>Costo</dt><dd>Ver precio en PLAFAM (pestaña Combos)</dd></div>
+              <div data-privado><dt>Costo</dt><dd>Ver precio en PLAFAM (pestaña Combos)</dd></div>
+              <div data-candado><dt>Costo</dt><dd><a href="contacto.html#registro">Regístrate para verlo</a></dd></div>
             </dl>
             <a class="btn btn-outline" href="#especialistas">Ver detalles<span class="visually-hidden"> de ginecología</span></a>
           </article>
@@ -148,7 +167,8 @@
             <dl class="service-meta">
               <div><dt>Especialista</dt><dd>Equipo del Dr. Juan Blanco</dd></div>
               <div><dt>Modalidad</dt><dd>Presencial</dd></div>
-              <div><dt>Costo</dt><dd>Colaboración con insumos y equipos</dd></div>
+              <div data-privado><dt>Costo</dt><dd>Colaboración con insumos y equipos</dd></div>
+              <div data-candado><dt>Costo</dt><dd><a href="contacto.html#registro">Regístrate para verlo</a></dd></div>
             </dl>
             <a class="btn btn-outline" href="#cirugia">Ver detalles<span class="visually-hidden"> de cirugía</span></a>
           </article>
@@ -159,7 +179,8 @@
             <dl class="service-meta">
               <div><dt>Especialista</dt><dd>Lic. Jonah Sira</dd></div>
               <div><dt>Modalidad</dt><dd>Online, a domicilio o en consultorio</dd></div>
-              <div><dt>Costo</dt><dd>$10 – $20 por sesión</dd></div>
+              <div data-privado><dt>Costo</dt><dd>$10 – $20 por sesión</dd></div>
+              <div data-candado><dt>Costo</dt><dd><a href="contacto.html#registro">Regístrate para verlo</a></dd></div>
             </dl>
             <a class="btn btn-outline" href="#especialistas">Ver detalles<span class="visually-hidden"> de fisioterapia y rehabilitación</span></a>
           </article>
@@ -216,7 +237,8 @@
             <h3>David Pinto</h3>
             <p class="profile__role">Asesoría y acompañamiento</p>
             <p class="profile__bio">“Soy hombre trans y llevo 8 años en este camino. Hoy te ofrezco lo que a mí me hubiera gustado tener al empezar: claridad, herramientas y una conversación honesta, con experiencia y sin rodeos.”</p>
-            <dl class="service-meta"><div><dt>Modalidad</dt><dd>Online</dd></div><div><dt>Costo</dt><dd>Consultar por Telegram</dd></div></dl>
+            <dl class="service-meta" data-privado><div><dt>Modalidad</dt><dd>Online</dd></div><div><dt>Costo</dt><dd>Consultar por Telegram</dd></div></dl>
+            <div class="lock-note" data-candado><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><rect x="4.5" y="10.5" width="15" height="10" rx="3"/><path d="M8 10.5V7a4 4 0 0 1 8 0v3.5"/></svg><span>Costos y contacto disponibles al <a href="contacto.html#registro">registrarte</a>.</span></div>
 
             <div class="profile__contacts"><a class="btn btn-outline" href="https://t.me/FundacionUnitransOf" target="_blank" rel="noopener"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M21 4 3 11l6 2.5L11.5 20l3-4.5L19 19z"/><path d="m9 13.5 7-5.5"/></svg>Telegram<span class="visually-hidden"> (se abre en una pestaña nueva)</span></a></div>
           </article>
@@ -225,63 +247,70 @@
             <h3>Lic. Camila Khatcherian</h3>
             <p class="profile__role">Psicoterapias, consultas e informe</p>
 
-            <dl class="service-meta"><div><dt>Modalidad</dt><dd>Online, consulta privada</dd></div><div><dt>Costo</dt><dd>$15</dd></div></dl>
+            <dl class="service-meta" data-privado><div><dt>Modalidad</dt><dd>Online, consulta privada</dd></div><div><dt>Costo</dt><dd>$15</dd></div></dl>
+            <div class="lock-note" data-candado><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><rect x="4.5" y="10.5" width="15" height="10" rx="3"/><path d="M8 10.5V7a4 4 0 0 1 8 0v3.5"/></svg><span>Costos y contacto disponibles al <a href="contacto.html#registro">registrarte</a>.</span></div>
 
-            <div class="profile__contacts"><a class="btn btn-outline" href="tel:+584123967691"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M5 4h4l2 5-2.5 1.5a11 11 0 0 0 5 5L15 13l5 2v4a2 2 0 0 1-2 2A16 16 0 0 1 3 6a2 2 0 0 1 2-2z"/></svg>+58 412-3967691</a></div>
+            <div class="profile__contacts"><a class="btn btn-outline" href="tel:+584123967691" data-privado><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M5 4h4l2 5-2.5 1.5a11 11 0 0 0 5 5L15 13l5 2v4a2 2 0 0 1-2 2A16 16 0 0 1 3 6a2 2 0 0 1 2-2z"/></svg>+58 412-3967691</a></div>
           </article>
           <article class="card profile">
             <span class="avatar" style="background:#2C7268" aria-hidden="true"><span class="avatar__initials">FG</span><img src="https://woooth.stripocdn.email/content/guids/CABINET_3935b96dc28b17f539e4487267e9972f4f26c60d965d8f13517356951e308922/images/profilepic_3.png" alt="" width="72" height="72" loading="lazy" decoding="async" data-fallback="remove"></span>
             <h3>Dra. Fabiola Galviz</h3>
             <p class="profile__role">Ginecología y Fertilidad</p>
 
-            <dl class="service-meta"><div><dt>Modalidad</dt><dd>Consulta privada online o presencial</dd></div><div><dt>Dónde</dt><dd>PLAFAM, los jueves</dd></div><div><dt>Costo</dt><dd>Ver consulta ginecológica en la web de PLAFAM, pestaña Combos</dd></div></dl>
+            <dl class="service-meta" data-privado><div><dt>Modalidad</dt><dd>Consulta privada online o presencial</dd></div><div><dt>Dónde</dt><dd>PLAFAM, los jueves</dd></div><div><dt>Costo</dt><dd>Ver consulta ginecológica en la web de PLAFAM, pestaña Combos</dd></div></dl>
+            <div class="lock-note" data-candado><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><rect x="4.5" y="10.5" width="15" height="10" rx="3"/><path d="M8 10.5V7a4 4 0 0 1 8 0v3.5"/></svg><span>Costos y contacto disponibles al <a href="contacto.html#registro">registrarte</a>.</span></div>
 
-            <div class="profile__contacts"><a class="btn btn-outline" href="tel:+584142835278"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M5 4h4l2 5-2.5 1.5a11 11 0 0 0 5 5L15 13l5 2v4a2 2 0 0 1-2 2A16 16 0 0 1 3 6a2 2 0 0 1 2-2z"/></svg>Cita previa: +58 414-2835278</a></div>
+            <div class="profile__contacts"><a class="btn btn-outline" href="tel:+584142835278" data-privado><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M5 4h4l2 5-2.5 1.5a11 11 0 0 0 5 5L15 13l5 2v4a2 2 0 0 1-2 2A16 16 0 0 1 3 6a2 2 0 0 1 2-2z"/></svg>Cita previa: +58 414-2835278</a></div>
           </article>
           <article class="card profile">
             <span class="avatar" style="background:#6A5F12" aria-hidden="true"><span class="avatar__initials">TR</span><img src="https://woooth.stripocdn.email/content/guids/CABINET_3935b96dc28b17f539e4487267e9972f4f26c60d965d8f13517356951e308922/images/profilepic_8.png" alt="" width="72" height="72" loading="lazy" decoding="async" data-fallback="remove"></span>
             <h3>Dra. Teresa Rossamando</h3>
             <p class="profile__role">Terapia hormonal · mujeres y hombres trans</p>
 
-            <dl class="service-meta"><div><dt>Privada presencial</dt><dd>Martes y jueves, previa cita · $40</dd></div><div><dt>Privada online</dt><dd>Martes y jueves en la tarde, previa cita · $30 a tasa BCV</dd></div><div><dt>Consulta pública</dt><dd>Lunes y viernes, 8:00 am a 12:00 pm, por orden de llegada (solo 10 pacientes)</dd></div></dl>
+            <dl class="service-meta" data-privado><div><dt>Privada presencial</dt><dd>Martes y jueves, previa cita · $40</dd></div><div><dt>Privada online</dt><dd>Martes y jueves en la tarde, previa cita · $30 a tasa BCV</dd></div><div><dt>Consulta pública</dt><dd>Lunes y viernes, 8:00 am a 12:00 pm, por orden de llegada (solo 10 pacientes)</dd></div></dl>
+            <div class="lock-note" data-candado><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><rect x="4.5" y="10.5" width="15" height="10" rx="3"/><path d="M8 10.5V7a4 4 0 0 1 8 0v3.5"/></svg><span>Costos y contacto disponibles al <a href="contacto.html#registro">registrarte</a>.</span></div>
             <p class="profile__note"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><circle cx="12" cy="12" r="9"/><path d="M12 11v5M12 8h.01"/></svg><span>Para la consulta pública lleva para donar: 10 hojas de reciclaje o blancas, 1 bolígrafo y 1 carpeta marrón.</span></p>
-            <div class="profile__contacts"><a class="btn btn-outline" href="tel:+584126382143"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M5 4h4l2 5-2.5 1.5a11 11 0 0 0 5 5L15 13l5 2v4a2 2 0 0 1-2 2A16 16 0 0 1 3 6a2 2 0 0 1 2-2z"/></svg>+58 412-6382143</a></div>
+            <div class="profile__contacts"><a class="btn btn-outline" href="tel:+584126382143" data-privado><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M5 4h4l2 5-2.5 1.5a11 11 0 0 0 5 5L15 13l5 2v4a2 2 0 0 1-2 2A16 16 0 0 1 3 6a2 2 0 0 1 2-2z"/></svg>+58 412-6382143</a></div>
           </article>
           <article class="card profile">
             <span class="avatar" style="background:#4F51A3" aria-hidden="true"><span class="avatar__initials">DM</span><img src="https://woooth.stripocdn.email/content/guids/CABINET_3935b96dc28b17f539e4487267e9972f4f26c60d965d8f13517356951e308922/images/profilepic_7.png" alt="" width="72" height="72" loading="lazy" decoding="async" data-fallback="remove"></span>
             <h3>Dra. Dora Millar</h3>
             <p class="profile__role">Terapia hormonal · mujeres y hombres trans</p>
 
-            <dl class="service-meta"><div><dt>Modalidad</dt><dd>Consulta privada presencial</dd></div><div><dt>Costo</dt><dd>$60</dd></div></dl>
+            <dl class="service-meta" data-privado><div><dt>Modalidad</dt><dd>Consulta privada presencial</dd></div><div><dt>Costo</dt><dd>$60</dd></div></dl>
+            <div class="lock-note" data-candado><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><rect x="4.5" y="10.5" width="15" height="10" rx="3"/><path d="M8 10.5V7a4 4 0 0 1 8 0v3.5"/></svg><span>Costos y contacto disponibles al <a href="contacto.html#registro">registrarte</a>.</span></div>
 
-            <div class="profile__contacts"><a class="btn btn-outline" href="tel:+584241844084"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M5 4h4l2 5-2.5 1.5a11 11 0 0 0 5 5L15 13l5 2v4a2 2 0 0 1-2 2A16 16 0 0 1 3 6a2 2 0 0 1 2-2z"/></svg>0424-1844084</a><a class="btn btn-outline" href="tel:+582129990375"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M5 4h4l2 5-2.5 1.5a11 11 0 0 0 5 5L15 13l5 2v4a2 2 0 0 1-2 2A16 16 0 0 1 3 6a2 2 0 0 1 2-2z"/></svg>0212-9990375</a></div>
+            <div class="profile__contacts"><a class="btn btn-outline" href="tel:+584241844084" data-privado><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M5 4h4l2 5-2.5 1.5a11 11 0 0 0 5 5L15 13l5 2v4a2 2 0 0 1-2 2A16 16 0 0 1 3 6a2 2 0 0 1 2-2z"/></svg>0424-1844084</a><a class="btn btn-outline" href="tel:+582129990375" data-privado><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M5 4h4l2 5-2.5 1.5a11 11 0 0 0 5 5L15 13l5 2v4a2 2 0 0 1-2 2A16 16 0 0 1 3 6a2 2 0 0 1 2-2z"/></svg>0212-9990375</a></div>
           </article>
           <article class="card profile">
             <span class="avatar" style="background:#B23A57" aria-hidden="true"><span class="avatar__initials">FS</span><img src="https://woooth.stripocdn.email/content/guids/CABINET_3935b96dc28b17f539e4487267e9972f4f26c60d965d8f13517356951e308922/images/profilepic_6.png" alt="" width="72" height="72" loading="lazy" decoding="async" data-fallback="remove"></span>
             <h3>Dr. Freddy Salazar</h3>
             <p class="profile__role">Medicina interna · Infectología e ITS · Sexología · Evaluación para terapia hormonal</p>
 
-            <dl class="service-meta"><div><dt>Consulta pública presencial</dt><dd>Viernes, 8:00 am a 9:00 pm</dd></div><div><dt>Privada presencial u online</dt><dd>$30, previa cita</dd></div></dl>
+            <dl class="service-meta" data-privado><div><dt>Consulta pública presencial</dt><dd>Viernes, 8:00 am a 9:00 pm</dd></div><div><dt>Privada presencial u online</dt><dd>$30, previa cita</dd></div></dl>
+            <div class="lock-note" data-candado><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><rect x="4.5" y="10.5" width="15" height="10" rx="3"/><path d="M8 10.5V7a4 4 0 0 1 8 0v3.5"/></svg><span>Costos y contacto disponibles al <a href="contacto.html#registro">registrarte</a>.</span></div>
             <p class="profile__note"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><circle cx="12" cy="12" r="9"/><path d="M12 11v5M12 8h.01"/></svg><span>Su aval no está autorizado para el convenio de terapia hormonal de mujeres trans.</span></p>
-            <div class="profile__contacts"><a class="btn btn-outline" href="tel:+584125418356"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M5 4h4l2 5-2.5 1.5a11 11 0 0 0 5 5L15 13l5 2v4a2 2 0 0 1-2 2A16 16 0 0 1 3 6a2 2 0 0 1 2-2z"/></svg>Cita con su asistente, Sr. Luis: 0412-5418356</a></div>
+            <div class="profile__contacts"><a class="btn btn-outline" href="tel:+584125418356" data-privado><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M5 4h4l2 5-2.5 1.5a11 11 0 0 0 5 5L15 13l5 2v4a2 2 0 0 1-2 2A16 16 0 0 1 3 6a2 2 0 0 1 2-2z"/></svg>Cita con su asistente, Sr. Luis: 0412-5418356</a></div>
           </article>
           <article class="card profile">
             <span class="avatar" style="background:#2C7268" aria-hidden="true"><span class="avatar__initials">JB</span><img src="https://woooth.stripocdn.email/content/guids/CABINET_3935b96dc28b17f539e4487267e9972f4f26c60d965d8f13517356951e308922/images/profilepic_4.png" alt="" width="72" height="72" loading="lazy" decoding="async" data-fallback="remove"></span>
             <h3>Dr. Juan Blanco</h3>
             <p class="profile__role">Cirugía</p>
 
-            <dl class="service-meta"><div><dt>Consulta pública presencial</dt><dd>Martes y jueves, 8:00 am a 11:00 am</dd></div><div><dt>Privada presencial u online</dt><dd>Lunes y miércoles, 2:00 pm a 5:00 pm · $50</dd></div></dl>
+            <dl class="service-meta" data-privado><div><dt>Consulta pública presencial</dt><dd>Martes y jueves, 8:00 am a 11:00 am</dd></div><div><dt>Privada presencial u online</dt><dd>Lunes y miércoles, 2:00 pm a 5:00 pm · $50</dd></div></dl>
+            <div class="lock-note" data-candado><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><rect x="4.5" y="10.5" width="15" height="10" rx="3"/><path d="M8 10.5V7a4 4 0 0 1 8 0v3.5"/></svg><span>Costos y contacto disponibles al <a href="contacto.html#registro">registrarte</a>.</span></div>
 
-            <div class="profile__contacts"><a class="btn btn-outline" href="tel:+584143112272"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M5 4h4l2 5-2.5 1.5a11 11 0 0 0 5 5L15 13l5 2v4a2 2 0 0 1-2 2A16 16 0 0 1 3 6a2 2 0 0 1 2-2z"/></svg>Cita previa: +58 414-3112272</a></div>
+            <div class="profile__contacts"><a class="btn btn-outline" href="tel:+584143112272" data-privado><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M5 4h4l2 5-2.5 1.5a11 11 0 0 0 5 5L15 13l5 2v4a2 2 0 0 1-2 2A16 16 0 0 1 3 6a2 2 0 0 1 2-2z"/></svg>Cita previa: +58 414-3112272</a></div>
           </article>
           <article class="card profile">
             <span class="avatar" style="background:#6A5F12" aria-hidden="true"><span class="avatar__initials">JS</span><img src="https://woooth.stripocdn.email/content/guids/CABINET_3935b96dc28b17f539e4487267e9972f4f26c60d965d8f13517356951e308922/images/profilepic_9.png" alt="" width="72" height="72" loading="lazy" decoding="async" data-fallback="remove"></span>
             <h3>Lic. Jonah Sira</h3>
             <p class="profile__role">Fisioterapia</p>
             <p class="profile__bio">“Hombre trans, fisioterapeuta y cinturón negro en Karate Do. Ayudo a mis pacientes a mejorar su salud desde un abordaje integral e individualizado.”</p>
-            <dl class="service-meta"><div><dt>Online</dt><dd>$10</dd></div><div><dt>A domicilio</dt><dd>$15</dd></div><div><dt>Chacaíto</dt><dd>$10</dd></div><div><dt>CCCT</dt><dd>$20</dd></div></dl>
+            <dl class="service-meta" data-privado><div><dt>Online</dt><dd>$10</dd></div><div><dt>A domicilio</dt><dd>$15</dd></div><div><dt>Chacaíto</dt><dd>$10</dd></div><div><dt>CCCT</dt><dd>$20</dd></div></dl>
+            <div class="lock-note" data-candado><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><rect x="4.5" y="10.5" width="15" height="10" rx="3"/><path d="M8 10.5V7a4 4 0 0 1 8 0v3.5"/></svg><span>Costos y contacto disponibles al <a href="contacto.html#registro">registrarte</a>.</span></div>
 
-            <div class="profile__contacts"><a class="btn btn-outline" href="tel:+584260364005"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M5 4h4l2 5-2.5 1.5a11 11 0 0 0 5 5L15 13l5 2v4a2 2 0 0 1-2 2A16 16 0 0 1 3 6a2 2 0 0 1 2-2z"/></svg>Cita previa: +58 426-0364005</a></div>
+            <div class="profile__contacts"><a class="btn btn-outline" href="tel:+584260364005" data-privado><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M5 4h4l2 5-2.5 1.5a11 11 0 0 0 5 5L15 13l5 2v4a2 2 0 0 1-2 2A16 16 0 0 1 3 6a2 2 0 0 1 2-2z"/></svg>Cita previa: +58 426-0364005</a></div>
           </article>
         </div>
       </div>
@@ -294,13 +323,13 @@
           <h2 id="hrt-title">Tus hormonas, de forma accesible</h2>
           <p>Con nuestros convenios puedes acceder a las hormonas que necesitas. Para beneficiarte necesitas el récipe médico y el informe de nuestros especialistas.</p>
         </div>
-        <p class="rate-bar" data-tasa hidden></p>
+        <div data-privado><p class="rate-bar" data-tasa hidden></p></div>
         <div class="hrt">
           <article class="card hrt__col">
             <span class="card__icon card__icon--pink"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><rect x="3" y="8.5" width="18" height="7" rx="3.5" transform="rotate(-45 12 12)"/><path d="m8.5 8.5 7 7"/></svg></span>
             <h3>Mujeres trans</h3>
             <ol class="steps"><li><span class="steps__num" aria-hidden="true">1</span><div><strong>Completa tu historia clínica</strong><p>Nos da toda la información necesaria.</p></div></li><li><span class="steps__num" aria-hidden="true">2</span><div><strong>Ten tu aval psicológico vigente</strong><p>Con nosotros o en otro lugar. Es requisito para comenzar la terapia hormonal.</p></div></li><li><span class="steps__num" aria-hidden="true">3</span><div><strong>Consulta de terapia hormonal</strong><p>Las doctoras Teresa Rossamando y Dora Millar son las únicas autorizadas para darte la receta y el informe del convenio.</p></div></li><li><span class="steps__num" aria-hidden="true">4</span><div><strong>Compra tus dosis</strong><p>Con tu receta, retira en PLAFAM (Caracas). La compra y la entrega son personales: solo tú puedes hacerlo.</p></div></li></ol>
-            <table class="price-table">
+            <div data-privado><table class="price-table">
               <caption><span class="product"><img src="https://woooth.stripocdn.email/content/guids/CABINET_3935b96dc28b17f539e4487267e9972f4f26c60d965d8f13517356951e308922/images/innovahealthsuppliesmetziinyectablemensual4.jpg" alt="" width="56" height="56" loading="lazy" decoding="async" data-fallback="remove"><span>Metzi (valerato de estradiol 50 mg) · 1 unidad</span></span></caption>
               <thead><tr><th scope="col">Dónde puedes conseguirla</th><th scope="col">Precio</th></tr></thead>
               <tbody><tr><th scope="row">PLAFAM (pestaña Anticonceptivos)</th><td data-precio="metzi/plafam"><span class="price-usd">$6,00</span></td></tr></tbody>
@@ -312,13 +341,18 @@
               <caption><span class="product"><img src="https://woooth.stripocdn.email/content/guids/CABINET_3935b96dc28b17f539e4487267e9972f4f26c60d965d8f13517356951e308922/images/unnamed.jpg" alt="" width="56" height="56" loading="lazy" decoding="async" data-fallback="remove"><span>Espironolactona 25 mg (bloqueador de testosterona) · 30 tabletas</span></span></caption>
               <thead><tr><th scope="col">Dónde puedes conseguirla</th><th scope="col">Precio</th></tr></thead>
               <tbody><tr><th scope="row"><a href="https://farmaciabadan.com/8704-espironolactona-espironolactona-25mg-x-30-tab-siegfried" target="_blank" rel="noopener">Badan<span class="visually-hidden"> (se abre en una pestaña nueva)</span></a></th><td data-precio="espironolactona/badan"><span class="price-usd">$7,56</span></td></tr><tr><th scope="row"><a href="https://www.farmatodo.com.ve/producto/115634505-espironolactona-25mg" target="_blank" rel="noopener">Farmatodo<span class="visually-hidden"> (se abre en una pestaña nueva)</span></a></th><td data-precio="espironolactona/farmatodo"><span class="price-usd">$9,01</span></td></tr><tr><th scope="row"><a href="https://www.locatel.com.ve/siefried_espironolactona_25mg_x_30_tabletas/p" target="_blank" rel="noopener">Locatel<span class="visually-hidden"> (se abre en una pestaña nueva)</span></a></th><td data-precio="espironolactona/locatel"><span class="price-usd">$7,60</span></td></tr></tbody>
-            </table>
+            </table></div>
+            <div class="lock-box" data-candado>
+              <span class="card__icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><rect x="4.5" y="10.5" width="15" height="10" rx="3"/><path d="M8 10.5V7a4 4 0 0 1 8 0v3.5"/></svg></span>
+              <div><strong>Precios del día en Bs y divisas</strong><p>Regístrate para ver dónde comprar y cuánto cuesta hoy, con la tasa oficial del BCV.</p>
+              <a class="btn btn-primary" href="contacto.html#registro">Registrarme</a></div>
+            </div>
           </article>
           <article class="card hrt__col">
             <span class="card__icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><rect x="3" y="8.5" width="18" height="7" rx="3.5" transform="rotate(-45 12 12)"/><path d="m8.5 8.5 7 7"/></svg></span>
             <h3>Hombres trans</h3>
             <ol class="steps"><li><span class="steps__num" aria-hidden="true">1</span><div><strong>Completa tu historia clínica</strong></div></li><li><span class="steps__num" aria-hidden="true">2</span><div><strong>Ten tu aval psicológico</strong><p>Con nosotros o en otro lugar. Si ya lo tramitaste dentro o fuera de Venezuela, con sello húmedo, es válido.</p></div></li><li><span class="steps__num" aria-hidden="true">3</span><div><strong>Consulta de terapia hormonal</strong><p>Solo la Dra. Teresa Rossamando, la Dra. Dora Millar y el Dr. Freddy Salazar pueden darte el informe y la receta para la compra.</p></div></li><li><span class="steps__num" aria-hidden="true">4</span><div><strong>Compra tus hormonas</strong><p>Con tu receta accedes a los aliados. Los envíos nacionales son exclusivamente por Droguería Divacún.</p></div></li></ol>
-            <table class="price-table">
+            <div data-privado><table class="price-table">
               <caption><span class="product"><img src="https://woooth.stripocdn.email/content/guids/CABINET_3935b96dc28b17f539e4487267e9972f4f26c60d965d8f13517356951e308922/images/enanbolic10amp250mgenantatodetestosterona250mg.jpg" alt="" width="56" height="56" loading="lazy" decoding="async" data-fallback="remove"><span>Enanbolic (enantato de testosterona 250 mg) · Caja de 10 ampollas</span></span></caption>
               <thead><tr><th scope="col">Dónde puedes conseguirla</th><th scope="col">Precio</th></tr></thead>
               <tbody><tr><th scope="row">Divacún (envíos nacionales)</th><td data-precio="enanbolic/divacun"><span class="price-usd">$85,00</span> <span class="price-unit">por caja</span></td></tr><tr><th scope="row"><a href="https://www.farmatodo.com.ve/producto/116405721-enanbolic-250mg-10ampollas-enantato-de-testosterona-cooper-pharma" target="_blank" rel="noopener">Farmatodo<span class="visually-hidden"> (se abre en una pestaña nueva)</span></a></th><td data-precio="enanbolic/farmatodo"><span class="price-usd">$64,18</span> <span class="price-unit">por caja</span></td></tr><tr><th scope="row"><a href="https://suplementosvenezuela.com/products/enanbolic-10-amp" target="_blank" rel="noopener">Suplementos Venezuela<span class="visually-hidden"> (se abre en una pestaña nueva)</span></a></th><td data-precio="enanbolic/suplementos"><span class="price-usd">€95,00</span> <span class="price-unit">por caja</span></td></tr><tr><th scope="row"><a href="https://farmaciabadan.com/6972-testosterona-testosterona-enantato-250mg-ml-enanbolic" target="_blank" rel="noopener">BADAN<span class="visually-hidden"> (se abre en una pestaña nueva)</span></a></th><td data-precio="enanbolic/badan"><span class="price-usd">$6,63</span> <span class="price-unit">por ampolla</span></td></tr></tbody>
@@ -326,7 +360,12 @@
               <caption><span class="product"><img src="https://woooth.stripocdn.email/content/guids/CABINET_3935b96dc28b17f539e4487267e9972f4f26c60d965d8f13517356951e308922/images/57841.jpg" alt="" width="56" height="56" loading="lazy" decoding="async" data-fallback="remove"><span>Testobolic (undecanoato de testosterona 1000 mg), similar a Nebido · 1 ampolla</span></span></caption>
               <thead><tr><th scope="col">Dónde puedes conseguirla</th><th scope="col">Precio</th></tr></thead>
               <tbody><tr><th scope="row">Divacún (envíos nacionales)</th><td data-precio="testobolic/divacun"><span class="price-usd">$103,00</span></td></tr><tr><th scope="row"><a href="https://www.farmatodo.com.ve/producto/114561439-testosterona-testobolic-1000mg-4ml-solucion-inyectable-cooper-pharma-limited" target="_blank" rel="noopener">Farmatodo<span class="visually-hidden"> (se abre en una pestaña nueva)</span></a></th><td data-precio="testobolic/farmatodo"><span class="price-usd">$83,47</span></td></tr><tr><th scope="row"><a href="https://suplementosvenezuela.com/products/testobolic-nebido-undecanoate-testosterone-1-000mg" target="_blank" rel="noopener">Suplementos Venezuela<span class="visually-hidden"> (se abre en una pestaña nueva)</span></a></th><td data-precio="testobolic/suplementos"><span class="price-usd">€110,00</span></td></tr><tr><th scope="row"><a href="https://farmaciabadan.com/5784-testosterona-testostero-undecanoato-1g-4ml-testobolic" target="_blank" rel="noopener">BADAN<span class="visually-hidden"> (se abre en una pestaña nueva)</span></a></th><td data-precio="testobolic/badan"><span class="price-usd">$85,80</span></td></tr></tbody>
-            </table>
+            </table></div>
+            <div class="lock-box" data-candado>
+              <span class="card__icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><rect x="4.5" y="10.5" width="15" height="10" rx="3"/><path d="M8 10.5V7a4 4 0 0 1 8 0v3.5"/></svg></span>
+              <div><strong>Precios del día en Bs y divisas</strong><p>Regístrate para ver dónde comprar y cuánto cuesta hoy, con la tasa oficial del BCV.</p>
+              <a class="btn btn-primary" href="contacto.html#registro">Registrarme</a></div>
+            </div>
           </article>
         </div>
         <div class="notice" style="margin-top:24px" role="note">
@@ -543,7 +582,7 @@
         <div class="cta">
           <h2 id="cta-title">Da el primer paso a tu ritmo</h2>
           <p>La historia clínica es el primer paso obligatorio para entrar a la red de acompañamiento.</p>
-          <a class="btn btn-primary" href="https://docs.google.com/forms/d/e/1FAIpQLSdtpMTkAnMtqpmvA0tcirgAL3okOtXZBCxzfw0XreKmvx6rZQ/viewform" target="_blank" rel="noopener">Quiero empezar mi historia clínica <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M14 4h6v6M20 4l-9 9"/><path d="M18 14v4a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4"/></svg><span class="visually-hidden">(se abre en una pestaña nueva)</span></a>
+          <a class="btn btn-primary" href="https://docs.google.com/forms/d/e/1FAIpQLSdtpMTkAnMtqpmvA0tcirgAL3okOtXZBCxzfw0XreKmvx6rZQ/viewform" target="_blank" rel="noopener" data-hc-link="contacto.html#registro">Quiero empezar mi historia clínica <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M14 4h6v6M20 4l-9 9"/><path d="M18 14v4a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4"/></svg><span class="visually-hidden">(se abre en una pestaña nueva)</span></a>
         </div>
       </div>
     </section>
@@ -580,6 +619,7 @@
     </div>
   </footer>
 
+  <script src="registro.js" defer></script>
   <script src="main.js" defer></script>
 </body>
 </html>
