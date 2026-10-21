@@ -188,6 +188,12 @@
     var s = estadoActual();
     var nac = $('reg-nacimiento');
     nac.setCustomValidity(nac.value && s.edad === null ? 'Revisa la fecha de nacimiento.' : '');
+    // El patrón acepta espacios y guiones; aquí se exige que haya al menos 10 dígitos de verdad
+    ['reg-telefono', 'reg-rep-telefono'].forEach(function (id) {
+      var tel = $(id);
+      var digitos = tel.value.replace(/\D/g, '').length;
+      tel.setCustomValidity(tel.value && digitos < 10 ? 'Escribe un número de teléfono completo, con código de área (por ejemplo 0412 1234567).' : '');
+    });
     if (!form.reportValidity()) return;
 
     var d = recoger();

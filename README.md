@@ -210,6 +210,16 @@ Las fotos de especialistas, los productos hormonales y los logos de aliados se c
 
 Para actualizar precios o especialistas basta con editar el texto en `acompanamiento.html` (sección `#especialistas` y `#hormonas`).
 
+### Agregar especialistas nuevos
+
+En `acompanamiento.html`, sección `#especialistas`, justo después de la tarjeta de la Lic. Camila Khatcherian, hay **dos tarjetas de psicología listas y ocultas** (dentro de un comentario `<!-- ... -->`). Para publicar una:
+
+1. Borra la línea que abre el comentario (`<!-- PSICÓLOGA/O NUEVA/O ...` y sus dos líneas de instrucciones) y la línea `-->` que va justo después de `</article>`.
+2. Cambia los textos en MAYÚSCULAS: iniciales, nombre, frase, modalidad, costo y teléfono (en `href="tel:..."` va sin espacios).
+3. En la tarjeta **Psicología** de la sección `#servicios` cambia "Especialista" por "Especialistas" y agrega los nombres (también está indicado en un comentario).
+
+El costo y el teléfono llevan `data-privado`, así que solo se ven después de registrarse, igual que en las demás tarjetas.
+
 ---
 
 ## Licencia

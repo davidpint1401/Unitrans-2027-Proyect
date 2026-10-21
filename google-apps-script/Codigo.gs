@@ -55,10 +55,14 @@ const COLUMNAS = [
   ['consentimiento', 'Consentimiento de datos'],
 ];
 
+// Datos que se guardan como texto para que la hoja no los convierta en número
+// (si no, "0412 1234567" pierde el 0 inicial y "0000000000" queda como 0)
+const COMO_TEXTO = ['telefono', 'representanteTelefono', 'representanteCedula'];
+
 function doPost(e) {
   const lock = LockService.getScriptLock();
-  lock.waitLock(10000);
   try {
+    lock.waitLock(10000);
     const datos = JSON.parse((e && e.postData && e.postData.contents) || '{}');
 
     // Campo trampa para bots: las personas no lo ven ni lo llenan
@@ -74,7 +78,7 @@ function doPost(e) {
     }
 
     hoja.appendRow(COLUMNAS.map(function (c) {
-      return c[0] === 'fechaRegistro' ? new Date() : limpiar(datos[c[0]]);
+      return c[0] === 'fechaRegistro' ? new Date() : limpiar(datos[c[0]], COMO_TEXTO.indexOf(c[0]) > -1);
     }));
 
     // Copia en la hoja de respuestas del formulario de historia clínica
@@ -87,13 +91,19 @@ function doPost(e) {
       }
     }
 
+    // El aviso es opcional: si falla (p. ej. por el límite diario de correos de Google), el registro
+    // ya está guardado y se responde ok. Si no, la persona reintentaría y quedaría duplicado.
     if (CORREO_AVISO) {
-      MailApp.sendEmail({
-        to: CORREO_AVISO,
-        subject: 'Nuevo registro en la web: ' + limpiar(datos.nombre),
-        body: 'Hay un registro nuevo en la web de la Fundación Unitrans.\n\n' +
-          'Revísalo en la hoja "' + HOJA + '":\n' + libro.getUrl(),
-      });
+      try {
+        MailApp.sendEmail({
+          to: CORREO_AVISO,
+          subject: 'Nuevo registro en la web: ' + limpiar(datos.nombre),
+          body: 'Hay un registro nuevo en la web de la Fundación Unitrans.\n\n' +
+            'Revísalo en la hoja "' + HOJA + '":\n' + libro.getUrl(),
+        });
+      } catch (err) {
+        console.warn('No se pudo enviar el aviso por correo: ' + err);
+      }
     }
     return respuesta({ ok: true, hojaFormulario: copiaFormulario });
   } catch (err) {
@@ -141,18 +151,19 @@ function guardarEnHojaDelFormulario(datos) {
     const t = normalizar(titulo);
     const regla = REGLAS_FORMULARIO.find(function (r) { return r[0].test(t); });
     if (!regla) return '';
-    return regla[1] === 'fechaRegistro' ? new Date() : limpiar(datos[regla[1]]);
+    return regla[1] === 'fechaRegistro' ? new Date() : limpiar(datos[regla[1]], COMO_TEXTO.indexOf(regla[1]) > -1);
   });
   hoja.appendRow(fila);
   return 'ok';
 }
 
-// Texto plano, máximo 500 caracteres, y sin fórmulas (evita que una respuesta como "=..." se ejecute en la hoja)
-function limpiar(valor) {
+// Texto plano, máximo 500 caracteres, y sin fórmulas (evita que una respuesta como "=..." se ejecute en la hoja).
+// comoTexto: el apóstrofo inicial hace que la hoja lo guarde tal cual (no se ve en la celda).
+function limpiar(valor, comoTexto) {
   if (valor === undefined || valor === null) return '';
   let texto = Array.isArray(valor) ? valor.join(', ') : String(valor);
   texto = texto.slice(0, 500).trim();
-  return /^[=+\-@]/.test(texto) ? "'" + texto : texto;
+  return texto && (comoTexto || /^[=+\-@]/.test(texto)) ? "'" + texto : texto;
 }
 
 function respuesta(obj) {
