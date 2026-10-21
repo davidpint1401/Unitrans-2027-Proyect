@@ -156,10 +156,15 @@
     return cfg.enviarAlGoogleForm && Object.keys(cfg.campos).some(function (k) { return cfg.campos[k]; });
   };
 
-  var enviarAppsScript = function (d) {
+  // Uno o varios Apps Script (p. ej. el nuevo y el viejo): el registro se envía a todos
+  var urlsAppsScript = [].concat(cfg.appsScriptUrls || [], cfg.appsScriptUrl || []).filter(function (u, i, todas) {
+    return u && todas.indexOf(u) === i;
+  });
+
+  var enviarAppsScript = function (url, d) {
     // text/plain evita la verificación previa (CORS); Apps Script responde {"ok": true} si guardó la fila.
     // Si la implementación no es pública, Google redirige al inicio de sesión y la petición falla.
-    return fetch(cfg.appsScriptUrl, {
+    return fetch(url, {
       method: 'POST',
       headers: { 'Content-Type': 'text/plain;charset=utf-8' },
       body: JSON.stringify(d)
@@ -197,8 +202,7 @@
     if (!form.reportValidity()) return;
 
     var d = recoger();
-    var envios = [];
-    if (cfg.appsScriptUrl) envios.push(enviarAppsScript(d));
+    var envios = urlsAppsScript.map(function (url) { return enviarAppsScript(url, d); });
     if (formConfigurado()) envios.push(enviarGoogleForm(d));
 
     var listo = function () {
@@ -215,7 +219,15 @@
     // Sin destino configurado no se puede guardar: se informa como error
     if (!envios.length) envios.push(Promise.reject(new Error('sin destino')));
 
-    Promise.all(envios)
+    // Basta con que un destino confirme que guardó: si se pidiera reintentar, los que sí guardaron
+    // quedarían con el registro duplicado. Los fallos se anotan en la consola para revisarlos.
+    var confirmados = 0;
+    Promise.all(envios.map(function (p, i) {
+      return p.then(function () { confirmados++; }, function (err) {
+        if (window.console) console.warn('Destino ' + (i + 1) + ' no confirmó el registro:', err && err.message);
+      });
+    }))
+      .then(function () { if (!confirmados) throw new Error('ningún destino confirmó'); })
       .then(listo)
       .catch(function () {
         // No se confirmó el guardado en Drive: los datos siguen en el formulario para reintentar

@@ -2,7 +2,7 @@
  * Configuración del registro de pacientes de la web.
  *
  * A dónde van los registros (puede ser a uno o a los dos):
- *   A. appsScriptUrl → hoja de cálculo propia de la Fundación (recomendado: guarda TODOS los datos).
+ *   A. appsScriptUrls → hoja de cálculo propia de la Fundación (recomendado: guarda TODOS los datos).
  *      Ver google-apps-script/Codigo.gs para instalarlo.
  *      El Apps Script también copia el registro en la hoja de respuestas del Google Form.
  *   B. Envío directo al Google Form (enviarAlGoogleForm): hoy Google lo rechaza; queda desactivado.
@@ -13,8 +13,12 @@ window.UNITRANS_REGISTRO = {
   // false = la web vuelve a funcionar como antes (botón al Google Form, costos visibles)
   activo: true,
 
-  // A. URL de la aplicación web de Apps Script (termina en /exec)
-  appsScriptUrl: 'https://script.google.com/macros/s/AKfycbzQSrXSQgDLqLc_yo5TSNEgKEHOJ85-g_jzY6TTdFQPi5eGWUVrRNAMdeckJPR51BeL/exec',
+  // A. URLs de las aplicaciones web de Apps Script (terminan en /exec). Cada registro se envía a todas;
+  // la web da el registro por guardado en cuanto una confirma.
+  appsScriptUrls: [
+    'https://script.google.com/macros/s/AKfycbzQSrXSQgDLqLc_yo5TSNEgKEHOJ85-g_jzY6TTdFQPi5eGWUVrRNAMdeckJPR51BeL/exec', // formulario nuevo
+    'https://script.google.com/macros/s/AKfycbxJL0csLm5ZmJvYcYfZm4B-b_Yd6B_TMn9e2yZc4wPjfE_uu_Ou9-0OX4Q6wgVXQfYrMg/exec'  // formulario viejo
+  ],
 
   // B. Google Form de historia clínica. Desactivado: el formulario rechaza los envíos externos (HTTP 400),
   // así que el Apps Script copia cada registro en su hoja de respuestas (HOJA_FORMULARIO en Codigo.gs).
