@@ -1,10 +1,14 @@
 /**
  * Fundación Unitrans — receptor de registros de la web.
  *
- * Guarda cada registro de la web en:
- *   1. esta hoja de cálculo (pestaña "Registros web", con todos los datos), y
- *   2. la hoja de respuestas del Google Form de historia clínica (HOJA_FORMULARIO),
- *      en las columnas que ya tiene, reconocidas por su título.
+ * El mismo archivo sirve para los dos Apps Script a los que la web envía cada registro:
+ *   - Pegado en la hoja de respuestas del Google Form (HOJA_FORMULARIO, "formulario viejo"):
+ *     agrega el registro como una fila más en la pestaña de respuestas del formulario,
+ *     en las columnas que ya tiene, reconocidas por su título. No crea pestañas nuevas.
+ *   - Pegado en cualquier otra hoja ("formulario nuevo", p. ej. "Registros web Unitrans"):
+ *     lo guarda con todos los datos en la pestaña "Registros web" de esa hoja.
+ *     No lo copia en la hoja del formulario (COPIAR_AL_FORMULARIO), porque de eso ya se
+ *     encarga el Apps Script del formulario viejo y quedaría repetido.
  *
  * Un registro por persona: antes de guardar busca el correo + los últimos 4 dígitos del
  * teléfono en las dos hojas. Si ya existe, no duplica y responde { ok, yaRegistrado: true }.
@@ -32,6 +36,10 @@ const HOJA = 'Registros web';
 // Hoja de respuestas del Google Form de historia clínica ("Formularios de Atención UNITRANS2020 (respuestas)").
 // Vacío = solo se guarda en esta hoja.
 const HOJA_FORMULARIO = '1D2wzkuRvVbkkCw9Oyb7oaJ92Kq66vQkLrZvcAGy7bwU';
+
+// true = el Apps Script del formulario nuevo también copia el registro en la hoja del formulario.
+// Solo hace falta si la web deja de enviar los registros al Apps Script del formulario viejo.
+const COPIAR_AL_FORMULARIO = false;
 
 // Correo que recibe un aviso por cada registro nuevo (sin datos de salud). Vacío = sin aviso.
 const CORREO_AVISO = 'fundaunitrans2020@gmail.com';
@@ -88,11 +96,20 @@ function doPost(e) {
     if (!datos.nombre || !datos.correo) return respuesta({ ok: false, error: 'faltan datos' });
 
     // Un registro por persona
-    const previo = buscarRegistro(datos.correo, ultimos4(datos.telefono));
+    const previo = buscarRegistro(datos.correo, ultimos4(datos.telefono), true);
     if (previo.completo) return respuesta({ ok: true, yaRegistrado: true });
     datos.posibleDuplicado = previo.correo ? 'Sí' : '';
 
     const libro = SpreadsheetApp.getActiveSpreadsheet();
+
+    // Apps Script del formulario viejo: solo una fila más en la pestaña de respuestas del formulario.
+    // Sin aviso por correo: ya lo envía el Apps Script del formulario nuevo.
+    if (HOJA_FORMULARIO && libro.getId() === HOJA_FORMULARIO) {
+      const resultado = guardarEnHojaDelFormulario(datos);
+      if (resultado !== 'ok') return respuesta({ ok: false, error: resultado });
+      return respuesta({ ok: true, hojaFormulario: resultado });
+    }
+
     const hoja = libro.getSheetByName(HOJA) || libro.insertSheet(HOJA);
     // Títulos siempre al día (por si se agregan columnas nuevas)
     hoja.getRange(1, 1, 1, COLUMNAS.length)
@@ -106,7 +123,7 @@ function doPost(e) {
 
     // Copia en la hoja de respuestas del formulario de historia clínica
     let copiaFormulario = 'sin configurar';
-    if (HOJA_FORMULARIO) {
+    if (HOJA_FORMULARIO && COPIAR_AL_FORMULARIO) {
       try {
         copiaFormulario = guardarEnHojaDelFormulario(datos);
       } catch (err) {
@@ -161,12 +178,15 @@ function normalizar(texto) {
 
 function guardarEnHojaDelFormulario(datos) {
   const libro = SpreadsheetApp.openById(HOJA_FORMULARIO);
-  // La pestaña de respuestas es la que tiene "Marca temporal" y "Apellidos" en la primera fila
-  const hoja = libro.getSheets().find(function (h) {
-    if (h.getLastColumn() === 0) return false;
-    const titulos = h.getRange(1, 1, 1, h.getLastColumn()).getValues()[0].map(normalizar).join('|');
-    return /marca temporal|timestamp/.test(titulos) && /apellido/.test(titulos);
-  });
+  const hojas = libro.getSheets().filter(function (h) { return h.getName() !== HOJA && h.getLastColumn() > 0; });
+  // La pestaña de respuestas es la que está vinculada al Google Form ("Respuestas de formulario 1").
+  // Si no se encuentra así, la que tiene "Marca temporal" y "Apellidos" en la primera fila.
+  const hoja = hojas.find(function (h) { return !!h.getFormUrl(); }) ||
+    hojas.find(function (h) { return /^(respuestas de formulario|form responses)/.test(normalizar(h.getName())); }) ||
+    hojas.find(function (h) {
+      const titulos = h.getRange(1, 1, 1, h.getLastColumn()).getValues()[0].map(normalizar).join('|');
+      return /marca temporal|timestamp/.test(titulos) && /apellido/.test(titulos);
+    });
   if (!hoja) return 'no se encontró la pestaña de respuestas';
 
   const titulos = hoja.getRange(1, 1, 1, hoja.getLastColumn()).getValues()[0];
@@ -180,19 +200,71 @@ function guardarEnHojaDelFormulario(datos) {
   return 'ok';
 }
 
+/* ---------- Búsqueda de registros previos ---------- */
+
+function ultimos4(telefono) {
+  const d = String(telefono || '').replace(/\D/g, '');
+  return d.length >= 4 ? d.slice(-4) : '';
+}
+
+// ¿Algún número del texto termina en esos 4 dígitos? (hay celdas con dos teléfonos)
+function telefonoCoincide(texto, tel4) {
+  if (!/^\d{4}$/.test(String(tel4 || ''))) return false;
+  const limpio = String(texto || '').replace(/[\s\-().]/g, '');
+  return new RegExp(tel4 + '(?!\\d)').test(limpio);
+}
+
+// Busca en esta hoja y en la del formulario. Devuelve si coincide el correo y si coincide correo + teléfono.
+// soloDondeGuarda: al guardar, cada Apps Script mira solo la hoja donde él escribe. Si mirara también
+// la del otro, el que responde segundo vería la fila del primero y no guardaría la suya.
+function buscarRegistro(correo, tel4, soloDondeGuarda) {
+  const buscado = String(correo || '').trim().toLowerCase();
+  const resultado = { correo: false, completo: false };
+  if (!buscado) return resultado;
+
+  const activo = SpreadsheetApp.getActiveSpreadsheet();
+  const esFormulario = !!HOJA_FORMULARIO && activo.getId() === HOJA_FORMULARIO;
+  const hojas = [];
+  const propia = activo.getSheetByName(HOJA);
+  if (propia && !(soloDondeGuarda && esFormulario)) hojas.push(propia);
+  if (HOJA_FORMULARIO && (!soloDondeGuarda || esFormulario)) {
+    try {
+      SpreadsheetApp.openById(HOJA_FORMULARIO).getSheets().forEach(function (h) { hojas.push(h); });
+    } catch (err) { /* sin acceso a la hoja del formulario */ }
+  }
+
+  hojas.forEach(function (hoja) {
+    if (resultado.completo || hoja.getLastRow() < 2) return;
+    const valores = hoja.getDataRange().getValues();
+    const titulos = valores[0].map(normalizar);
+    const colsCorreo = [], colsTel = [];
+    titulos.forEach(function (t, i) {
+      if (/correo/.test(t)) colsCorreo.push(i);
+      if (/telefono/.test(t)) colsTel.push(i);
+    });
+    for (let f = 1; f < valores.length && !resultado.completo; f++) {
+      const fila = valores[f];
+      const mismoCorreo = colsCorreo.some(function (i) { return String(fila[i]).trim().toLowerCase() === buscado; });
+      if (!mismoCorreo) continue;
+      resultado.correo = true;
+      if (colsTel.some(function (i) { return telefonoCoincide(fila[i], tel4); })) resultado.completo = true;
+    }
+  });
+  return resultado;
+}
+
+function limiteDeIntentos(correo) {
+  const cache = CacheService.getScriptCache();
+  const clave = 'v:' + Utilities.base64EncodeWebSafe(
+    Utilities.computeDigest(Utilities.DigestAlgorithm.SHA_256, String(correo || '').trim().toLowerCase()));
+  const intentos = Number(cache.get(clave) || 0) + 1;
+  cache.put(clave, String(intentos), 3600);
+  return intentos <= MAX_INTENTOS_POR_HORA;
+}
+
 // Texto plano, máximo 500 caracteres, y sin fórmulas (evita que una respuesta como "=..." se ejecute en la hoja).
 // comoTexto: el apóstrofo inicial hace que la hoja lo guarde tal cual (no se ve en la celda).
 function limpiar(valor, comoTexto) {
-  if (valor === undefined || valor === null) return '';
-  let texto = Array.isArray(valor) ? valor.join(', ') : String(valor);
-  texto = texto.slice(0, 500).trim();
-
-  // Si comienza con un operador de fórmula, se escapa para que la hoja no lo ejecute.
-  if (/^[=+\-@]/.test(texto)) texto = "'" + texto;
-
-  if (comoTexto && texto) return "'" + texto;
-  return texto;
-}
   if (valor === undefined || valor === null) return '';
   let texto = Array.isArray(valor) ? valor.join(', ') : String(valor);
   texto = texto.slice(0, 500).trim();

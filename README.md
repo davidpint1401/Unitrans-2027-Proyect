@@ -165,18 +165,20 @@ La página **Contacto** tiene un formulario de registro (`#registro`). Al comple
 
 ### A dónde llegan los registros
 
-La web envía cada registro a **dos Google Apps Script**, el del formulario nuevo y el del formulario viejo (lista `appsScriptUrls` en `registro-config.js`). Basta con que uno confirme para dar el registro por guardado; así, si uno falla, la persona no reintenta y no queda duplicada en el otro. El código de referencia está en `google-apps-script/Codigo.gs` y guarda en dos hojas:
+La web envía cada registro a **dos Google Apps Script** (lista `appsScriptUrls` en `registro-config.js`). Los dos usan el mismo archivo, `google-apps-script/Codigo.gs`, y cada uno llena su propia hoja:
 
-1. **"Registros web Unitrans"**, pestaña *Registros web*, con todos los datos: fecha de nacimiento, representante y consentimiento.
-2. **"Formularios de Atención UNITRANS2020 (respuestas)"**, la hoja del Google Form de historia clínica. El registro entra como una fila más en las columnas que ya existen, que se reconocen por su título.
+1. **Formulario nuevo** (el script de **"Registros web Unitrans"**): pestaña *Registros web*, con todos los datos, incluidos fecha de nacimiento, representante y consentimiento. Envía el aviso por correo.
+2. **Formulario viejo** (el script de **"Formularios de Atención UNITRANS2020 (respuestas)"**): una fila más en la pestaña de respuestas del Google Form (*Respuestas de formulario 1*), en las columnas que ya existen, que se reconocen por su título. No crea pestañas nuevas.
+
+El script sabe cuál de los dos es comparando su hoja con `HOJA_FORMULARIO`. Basta con que uno confirme para dar el registro por guardado: así, si uno falla, la persona no reintenta y no queda duplicada en el otro.
 
 La web solo muestra el mensaje de éxito cuando el script confirma que guardó la fila. Si no puede confirmarlo, avisa a la persona para que lo intente de nuevo; sus datos siguen en el formulario.
 
 > El envío directo al Google Form está desactivado (`enviarAlGoogleForm: false`) porque Google rechaza los envíos que no vienen de su propia página (HTTP 400). Por eso es el script el que escribe en la hoja del formulario.
 
-**Instalar o actualizar el script** (con la cuenta dueña de las dos hojas):
+**Instalar o actualizar los scripts** (con la cuenta dueña de las dos hojas). Hay que hacerlo **en las dos hojas**, con el mismo archivo:
 
-1. Abre "Registros web Unitrans" y ve a **Extensiones → Apps Script**. Pega el contenido de `google-apps-script/Codigo.gs` y guarda.
+1. Abre la hoja ("Registros web Unitrans" o "Formularios de Atención UNITRANS2020 (respuestas)") y ve a **Extensiones → Apps Script**. Borra todo, pega el contenido completo de `google-apps-script/Codigo.gs` y guarda.
 2. Ve a **Implementar → Gestionar implementaciones**, pulsa ✏️ y en *Versión* elige **Nueva versión**. Revisa estos dos ajustes:
    - *Ejecutar como*: **Yo**. Si eliges "Usuario que accede a la aplicación web", Google pide iniciar sesión.
    - *Quién tiene acceso*: **Cualquier usuario**. Esta opción solo aparece después de elegir *Ejecutar como: Yo*. Si eliges "Cualquier usuario con una cuenta de Google", Google pide iniciar sesión y la web no puede guardar.
