@@ -164,7 +164,7 @@ La página **Contacto** tiene un formulario de registro (`#registro`). Al comple
 
 ### A dónde llegan los registros
 
-La web envía cada registro a un **Google Apps Script** (`google-apps-script/Codigo.gs`) que lo guarda en dos hojas:
+La web envía cada registro a **dos Google Apps Script**, el del formulario nuevo y el del formulario viejo (lista `appsScriptUrls` en `registro-config.js`). Basta con que uno confirme para dar el registro por guardado; así, si uno falla, la persona no reintenta y no queda duplicada en el otro. El código de referencia está en `google-apps-script/Codigo.gs` y guarda en dos hojas:
 
 1. **"Registros web Unitrans"**, pestaña *Registros web*, con todos los datos: fecha de nacimiento, representante y consentimiento.
 2. **"Formularios de Atención UNITRANS2020 (respuestas)"**, la hoja del Google Form de historia clínica. El registro entra como una fila más en las columnas que ya existen, que se reconocen por su título.
@@ -181,7 +181,7 @@ La web solo muestra el mensaje de éxito cuando el script confirma que guardó l
    - *Quién tiene acceso*: **Cualquier usuario**. Esta opción solo aparece después de elegir *Ejecutar como: Yo*. Si eliges "Cualquier usuario con una cuenta de Google", Google pide iniciar sesión y la web no puede guardar.
 3. Pulsa **Implementar** y autoriza los permisos. Google pide acceso a las hojas de cálculo porque el script escribe en las dos.
 
-La URL `/exec` no cambia, así que no hay que tocar `registro-config.js`.
+La URL `/exec` no cambia, así que no hay que tocar `registro-config.js`. Si se crea una implementación nueva (URL distinta), hay que agregarla a `appsScriptUrls`.
 
 ### Un registro por persona
 

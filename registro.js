@@ -156,10 +156,15 @@
     return cfg.enviarAlGoogleForm && Object.keys(cfg.campos).some(function (k) { return cfg.campos[k]; });
   };
 
-  var enviarAppsScript = function (d) {
+  // Uno o varios Apps Script (p. ej. el nuevo y el viejo): el registro se envía a todos
+  var urlsAppsScript = [].concat(cfg.appsScriptUrls || [], cfg.appsScriptUrl || []).filter(function (u, i, todas) {
+    return u && todas.indexOf(u) === i;
+  });
+
+  var enviarAppsScript = function (url, d) {
     // text/plain evita la verificación previa (CORS); Apps Script responde {"ok": true} si guardó la fila.
     // Si la implementación no es pública, Google redirige al inicio de sesión y la petición falla.
-    return fetch(cfg.appsScriptUrl, {
+    return fetch(url, {
       method: 'POST',
       headers: { 'Content-Type': 'text/plain;charset=utf-8' },
       body: JSON.stringify(d)
@@ -235,11 +240,16 @@
     var s = estadoActual();
     var nac = $('reg-nacimiento');
     nac.setCustomValidity(nac.value && s.edad === null ? 'Revisa la fecha de nacimiento.' : '');
+    // El patrón acepta espacios y guiones; aquí se exige que haya al menos 10 dígitos de verdad
+    ['reg-telefono', 'reg-rep-telefono'].forEach(function (id) {
+      var tel = $(id);
+      var digitos = tel.value.replace(/\D/g, '').length;
+      tel.setCustomValidity(tel.value && digitos < 10 ? 'Escribe un número de teléfono completo, con código de área (por ejemplo 0412 1234567).' : '');
+    });
     if (!form.reportValidity()) return;
 
     var d = recoger();
-    var envios = [];
-    if (cfg.appsScriptUrl) envios.push(enviarAppsScript(d));
+    var envios = urlsAppsScript.map(function (url) { return enviarAppsScript(url, d); });
     if (formConfigurado()) envios.push(enviarGoogleForm(d));
 
     boton.disabled = true;
@@ -248,9 +258,27 @@
     // Sin destino configurado no se puede guardar: se informa como error
     if (!envios.length) envios.push(Promise.reject(new Error('sin destino')));
 
-    Promise.all(envios)
-      // Si el correo y el teléfono ya estaban registrados, no se duplica: se avisa y se habilita el acceso
+    // Sin destino configurado no se puede guardar: se informa como error
+    if (!envios.length) envios.push(Promise.reject(new Error('sin destino')));
+
+    // Basta con que un destino confirme que guardó: si se pidiera reintentar, los que sí guardaron
+    // quedarían con el registro duplicado. Los fallos se anotan en la consola para revisarlos.
+    var confirmados = 0;
+    Promise.all(envios.map(function (p, i) {
+      return p.then(function (res) {
+        confirmados++;
+        return res;
+      }, function (err) {
+        if (window.console) console.warn('Destino ' + (i + 1) + ' no confirmó el registro:', err && err.message);
+        return null;
+      });
+    }))
+      .then(function (res) {
+        if (!confirmados) throw new Error('ningún destino confirmó');
+        return res;
+      })
       .then(function (res) { mostrarExito(res.some(function (j) { return j && j.yaRegistrado; })); })
+      .then(listo)
       .catch(function () {
         // No se confirmó el guardado en Drive: los datos siguen en el formulario para reintentar
         boton.disabled = false;
