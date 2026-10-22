@@ -67,6 +67,7 @@ El diseño parte del **manual de marca Unitrans**. Es cálido, cercano y humano,
 ├── .github/workflows/
 │   └── precios.yml           # Ejecuta el script dos veces al día
 ├── assets/
+│   ├── equipo/                   # Fotos de especialistas nuevos (ver LEEME.md)
 │   ├── logo-unitrans.png         # Logo oficial a color (header)
 │   └── logo-unitrans-blanco.png  # Logo para fondos oscuros (footer)
 ├── .gitignore
@@ -216,6 +217,17 @@ Datos que siguen **por confirmar**:
 Las fotos de especialistas, los productos hormonales y los logos de aliados se cargan desde el servidor de imágenes de los correos informativos (`woooth.stripocdn.email`). Si alguna no carga, `main.js` la retira y deja visibles las iniciales o el nombre en texto, así que el diseño no se rompe. Lo recomendable es copiar esos archivos a `assets/` y reemplazar en los HTML la dirección `https://woooth.stripocdn.email/.../images/` por `assets/`, para no depender de ese servidor.
 
 Para actualizar precios o especialistas basta con editar el texto en `acompanamiento.html` (sección `#especialistas` y `#hormonas`).
+
+### Cómo agregar a una persona especialista (por ejemplo, psicólogos nuevos)
+
+En `acompanamiento.html`, sección `#especialistas`, ya hay **dos fichas de psicología preparadas y ocultas** (llevan el atributo `hidden` y el comentario `PSICÓLOGO/A NUEVO/A`). Para publicar cada una:
+
+1. Cambia nombre, iniciales del avatar, rol, bio, modalidad, costo y teléfono. Lo que va dentro de `data-privado` (costos y contacto) solo se ve después del registro.
+2. Sube su foto a `assets/equipo/psicologia-1.jpg` (o `-2`). Si no hay foto, se ven las iniciales.
+3. Borra el atributo `hidden` del `<article>`.
+4. Añade su nombre en la tarjeta **Psicología** de `acompanamiento.html` (sección `#servicios`) y de `index.html`; hay un comentario que marca el sitio.
+
+Para cualquier otra especialidad, copia una ficha `<article class="card profile">` existente y edítala igual.
 
 ---
 
