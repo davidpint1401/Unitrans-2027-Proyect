@@ -6,6 +6,12 @@
  *   2. la hoja de respuestas del Google Form de historia clínica (HOJA_FORMULARIO),
  *      en las columnas que ya tiene, reconocidas por su título.
  *
+ * Un registro por persona: antes de guardar busca el correo + los últimos 4 dígitos del
+ * teléfono en las dos hojas. Si ya existe, no duplica y responde { ok, yaRegistrado: true }.
+ * También atiende { accion: 'verificar', correo, telefono4 } para que quien ya se registró
+ * (en la web o en el Google Form) vea precios y especialistas sin registrarse de nuevo.
+ * La web nunca recibe la lista de correos: solo un sí o un no.
+ *
  * Instalación (una sola vez, con la cuenta de la Fundación):
  *  1. Crea una hoja de cálculo nueva en Google Drive (p. ej. "Registros web Unitrans").
  *  2. Menú Extensiones → Apps Script. Borra lo que haya y pega este archivo completo. Guarda.
@@ -53,7 +59,11 @@ const COLUMNAS = [
   ['representanteCorreo', 'Representante: correo'],
   ['representanteAutoriza', 'Representante autoriza'],
   ['consentimiento', 'Consentimiento de datos'],
+  ['posibleDuplicado', 'Posible duplicado (mismo correo, otro teléfono)'],
 ];
+
+// Máximo de verificaciones por correo y por hora (evita que alguien pruebe correos ajenos al azar)
+const MAX_INTENTOS_POR_HORA = 8;
 
 function doPost(e) {
   const lock = LockService.getScriptLock();
@@ -63,15 +73,28 @@ function doPost(e) {
 
     // Campo trampa para bots: las personas no lo ven ni lo llenan
     if (datos.sitioWeb) return respuesta({ ok: true });
+
+    // Acceso de quien ya tiene registro: correo + últimos 4 dígitos del teléfono
+    if (datos.accion === 'verificar') {
+      if (!limiteDeIntentos(datos.correo)) return respuesta({ ok: false, error: 'demasiados intentos' });
+      const tel4 = String(datos.telefono4 || '').replace(/\D/g, '').slice(-4);
+      return respuesta({ ok: true, registrado: buscarRegistro(datos.correo, tel4).completo });
+    }
+
     if (!datos.nombre || !datos.correo) return respuesta({ ok: false, error: 'faltan datos' });
+
+    // Un registro por persona
+    const previo = buscarRegistro(datos.correo, ultimos4(datos.telefono));
+    if (previo.completo) return respuesta({ ok: true, yaRegistrado: true });
+    datos.posibleDuplicado = previo.correo ? 'Sí' : '';
 
     const libro = SpreadsheetApp.getActiveSpreadsheet();
     const hoja = libro.getSheetByName(HOJA) || libro.insertSheet(HOJA);
-    if (hoja.getLastRow() === 0) {
-      hoja.appendRow(COLUMNAS.map(function (c) { return c[1]; }));
-      hoja.setFrozenRows(1);
-      hoja.getRange(1, 1, 1, COLUMNAS.length).setFontWeight('bold');
-    }
+    // Títulos siempre al día (por si se agregan columnas nuevas)
+    hoja.getRange(1, 1, 1, COLUMNAS.length)
+      .setValues([COLUMNAS.map(function (c) { return c[1]; })])
+      .setFontWeight('bold');
+    hoja.setFrozenRows(1);
 
     hoja.appendRow(COLUMNAS.map(function (c) {
       return c[0] === 'fechaRegistro' ? new Date() : limpiar(datos[c[0]]);
@@ -145,6 +168,64 @@ function guardarEnHojaDelFormulario(datos) {
   });
   hoja.appendRow(fila);
   return 'ok';
+}
+
+/* ---------- Búsqueda de registros previos ---------- */
+
+function ultimos4(telefono) {
+  const d = String(telefono || '').replace(/\D/g, '');
+  return d.length >= 4 ? d.slice(-4) : '';
+}
+
+// ¿Algún número del texto termina en esos 4 dígitos? (hay celdas con dos teléfonos)
+function telefonoCoincide(texto, tel4) {
+  if (!/^\d{4}$/.test(String(tel4 || ''))) return false;
+  const limpio = String(texto || '').replace(/[\s\-().]/g, '');
+  return new RegExp(tel4 + '(?!\\d)').test(limpio);
+}
+
+// Busca en esta hoja y en la del formulario. Devuelve si coincide el correo y si coincide correo + teléfono.
+function buscarRegistro(correo, tel4) {
+  const buscado = String(correo || '').trim().toLowerCase();
+  const resultado = { correo: false, completo: false };
+  if (!buscado) return resultado;
+
+  const hojas = [];
+  const propia = SpreadsheetApp.getActiveSpreadsheet().getSheetByName(HOJA);
+  if (propia) hojas.push(propia);
+  if (HOJA_FORMULARIO) {
+    try {
+      SpreadsheetApp.openById(HOJA_FORMULARIO).getSheets().forEach(function (h) { hojas.push(h); });
+    } catch (err) { /* sin acceso a la hoja del formulario */ }
+  }
+
+  hojas.forEach(function (hoja) {
+    if (resultado.completo || hoja.getLastRow() < 2) return;
+    const valores = hoja.getDataRange().getValues();
+    const titulos = valores[0].map(normalizar);
+    const colsCorreo = [], colsTel = [];
+    titulos.forEach(function (t, i) {
+      if (/correo/.test(t)) colsCorreo.push(i);
+      if (/telefono/.test(t)) colsTel.push(i);
+    });
+    for (let f = 1; f < valores.length && !resultado.completo; f++) {
+      const fila = valores[f];
+      const mismoCorreo = colsCorreo.some(function (i) { return String(fila[i]).trim().toLowerCase() === buscado; });
+      if (!mismoCorreo) continue;
+      resultado.correo = true;
+      if (colsTel.some(function (i) { return telefonoCoincide(fila[i], tel4); })) resultado.completo = true;
+    }
+  });
+  return resultado;
+}
+
+function limiteDeIntentos(correo) {
+  const cache = CacheService.getScriptCache();
+  const clave = 'v:' + Utilities.base64EncodeWebSafe(
+    Utilities.computeDigest(Utilities.DigestAlgorithm.SHA_256, String(correo || '').trim().toLowerCase()));
+  const intentos = Number(cache.get(clave) || 0) + 1;
+  cache.put(clave, String(intentos), 3600);
+  return intentos <= MAX_INTENTOS_POR_HORA;
 }
 
 // Texto plano, máximo 500 caracteres, y sin fórmulas (evita que una respuesta como "=..." se ejecute en la hoja)

@@ -86,6 +86,27 @@
           <p>Con este registro empezamos tu historia clínica y se habilitan los costos y contactos de especialistas y los precios de las hormonas. Toma unos 3 minutos.</p>
         </div>
 
+        <div class="card reg-acceso" id="acceso">
+          <div>
+            <h3>¿Ya te registraste antes en Unitrans?</h3>
+            <p>Si ya llenaste tu historia clínica, en esta web o en nuestro formulario, entra con tu correo y los últimos 4 dígitos de tu teléfono. No necesitas registrarte de nuevo.</p>
+          </div>
+          <form class="acceso-form" id="form-acceso" novalidate>
+            <div class="field">
+              <label for="acc-correo">Correo electrónico</label>
+              <input id="acc-correo" type="email" autocomplete="email" required>
+            </div>
+            <div class="field field--tel4">
+              <label for="acc-tel4">Últimos 4 dígitos de tu teléfono</label>
+              <input id="acc-tel4" type="text" inputmode="numeric" autocomplete="off" maxlength="4" pattern="[0-9]{4}" placeholder="1234" required>
+            </div>
+            <button class="btn btn-outline" type="submit">Ver precios y especialistas</button>
+            <p class="form-status" id="acc-estado" role="status" aria-live="polite"></p>
+          </form>
+        </div>
+
+        <p class="reg-separador"><span>¿Primera vez? Completa tu registro</span></p>
+
         <p class="notice notice--info" id="reg-ya-registrado" hidden><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="m5 12 5 5 9-10"/></svg><span>Ya te registraste desde este dispositivo. Si necesitas actualizar tus datos, puedes enviar el formulario de nuevo.</span></p>
 
         <form class="reg-form card" id="form-registro" novalidate>
@@ -213,8 +234,8 @@
 
         <div class="reg-success card" id="reg-exito" tabindex="-1" hidden>
           <span class="card__icon card__icon--green"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M12 20s-7-4.35-7-10a4 4 0 0 1 7-2.65A4 4 0 0 1 19 10c0 5.65-7 10-7 10z"/></svg></span>
-          <h3>¡Gracias! Ya empezamos tu historia clínica</h3>
-          <p>Recibimos tu registro. Ahora puedes ver los costos y contactos de cada especialista y los precios de las hormonas. Te escribiremos al correo o teléfono que nos diste.</p>
+          <h3 id="reg-exito-titulo">¡Gracias! Ya empezamos tu historia clínica</h3>
+          <p id="reg-exito-texto">Recibimos tu registro. Ahora puedes ver los costos y contactos de cada especialista y los precios de las hormonas. Te escribiremos al correo o teléfono que nos diste.</p>
           <div class="hero__actions">
             <a class="btn btn-primary" href="acompanamiento.html#especialistas">Ver especialistas</a>
             <a class="btn btn-outline" href="acompanamiento.html#hormonas">Ver precios de hormonas</a>
