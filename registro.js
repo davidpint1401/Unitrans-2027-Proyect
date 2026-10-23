@@ -202,10 +202,17 @@
       botonAcceso.disabled = true;
       estadoAcceso.className = 'form-status';
       estadoAcceso.textContent = 'Buscando tu registro…';
-      // Solo se envían el correo y 4 dígitos; la web nunca recibe datos de otras personas
-      enviarAppsScript({ accion: 'verificar', correo: $('acc-correo').value.trim(), telefono4: $('acc-tel4').value.trim() })
-        .then(function (j) {
-          if (j.registrado) return mostrarExito(true);
+      // Solo se envían el correo y 4 dígitos; la web nunca recibe datos de otras personas.
+      // Se pregunta a todos los Apps Script: basta con que uno encuentre el registro.
+      var consulta = { accion: 'verificar', correo: $('acc-correo').value.trim(), telefono4: $('acc-tel4').value.trim() };
+      var errores = [];
+      Promise.all(urlsAppsScript.map(function (url) {
+        return enviarAppsScript(url, consulta).catch(function (err) { errores.push(err); return null; });
+      }))
+        .then(function (res) {
+          if (res.some(function (j) { return j && j.registrado; })) return mostrarExito(true);
+          // Si ninguno pudo responder, es un error de conexión y no un "no encontrado"
+          if (errores.length === res.length) throw errores[0] || new Error('sin destino');
           botonAcceso.disabled = false;
           estadoAcceso.className = 'form-status is-error';
           estadoAcceso.textContent = 'No encontramos un registro con ese correo y esos 4 dígitos. Revisa los datos o completa el registro más abajo.';
@@ -258,9 +265,6 @@
     // Sin destino configurado no se puede guardar: se informa como error
     if (!envios.length) envios.push(Promise.reject(new Error('sin destino')));
 
-    // Sin destino configurado no se puede guardar: se informa como error
-    if (!envios.length) envios.push(Promise.reject(new Error('sin destino')));
-
     // Basta con que un destino confirme que guardó: si se pidiera reintentar, los que sí guardaron
     // quedarían con el registro duplicado. Los fallos se anotan en la consola para revisarlos.
     var confirmados = 0;
@@ -278,7 +282,6 @@
         return res;
       })
       .then(function (res) { mostrarExito(res.some(function (j) { return j && j.yaRegistrado; })); })
-      .then(listo)
       .catch(function () {
         // No se confirmó el guardado en Drive: los datos siguen en el formulario para reintentar
         boton.disabled = false;
