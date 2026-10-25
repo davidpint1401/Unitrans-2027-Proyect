@@ -16,8 +16,8 @@ window.UNITRANS_REGISTRO = {
   // A. URLs de las aplicaciones web de Apps Script (terminan en /exec). Cada registro se envía a todas;
   // la web da el registro por guardado en cuanto una confirma.
   appsScriptUrls: [
-    'https://script.google.com/macros/s/AKfycbzQSrXSQgDLqLc_yo5TSNEgKEHOJ85-g_jzY6TTdFQPi5eGWUVrRNAMdeckJPR51BeL/exec', // formulario nuevo
-    'https://script.google.com/macros/s/AKfycbxJL0csLm5ZmJvYcYfZm4B-b_Yd6B_TMn9e2yZc4wPjfE_uu_Ou9-0OX4Q6wgVXQfYrMg/exec'  // formulario viejo
+    'https://script.google.com/macros/s/AKfycbyIXC-S30GI7mS5E5d8xpTgIGMNAZmZIB8QtchkS62eZa5LszcJ4bPnGDKCmHKQce1X/exec', // formulario nuevo
+    'https://script.google.com/macros/s/AKfycbybkR80bmfrU_uqtx-imCQI4hWOEJWOrf2uf-d9LnIcC1sVmVIccQ_YdQSRI9-uOKHOVA/exec'  // formulario viejo
   ],
 
   // B. Google Form de historia clínica. Desactivado: el formulario rechaza los envíos externos (HTTP 400),
