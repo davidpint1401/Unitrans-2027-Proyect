@@ -887,14 +887,6 @@ html:not(.reg-locked) [data-candado] { display: none !important; }
 #laboratorios .card :is(p, dd, li),
 #alianzas .partner-card p { color: #D4D4DE; }
 #laboratorios .card a:not(.btn) { color: #fff; }
-/* Logos sobre fondo blanco para que se vean bien */
-#laboratorios .logo-strip,
-#alianzas .logo-strip {
-  align-self: flex-start;
-  padding: 8px 14px;
-  background: #fff;
-  border-radius: 12px;
-}
 #laboratorios .service-meta { background: #24243A; }
 #laboratorios .steps__num { background: #fff; color: #111118; }
 #laboratorios .card .btn-primary,
