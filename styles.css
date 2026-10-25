@@ -314,6 +314,8 @@ p + p { margin-top: 0.9em; }
 .card h3 { color: var(--text); }
 .card p { color: var(--text-muted); }
 .card .btn { margin-top: auto; align-self: flex-start; }
+.card-actions { margin-top: auto; display: flex; flex-wrap: wrap; gap: 10px; }
+.card-actions .btn { margin-top: 0; }
 .card--flat { box-shadow: none; }
 .section--blue .card,
 .section--pink .card,
