@@ -874,3 +874,34 @@ html:not(.reg-locked) [data-candado] { display: none !important; }
   .reg-acceso { padding: 32px 40px; }
   .acceso-form { grid-template-columns: 1.4fr 1fr auto; }
 }
+
+/* ---------- Tarjetas oscuras: laboratorios y alianzas ---------- */
+#laboratorios .card,
+#alianzas .partner-card {
+  background: #111118;
+  border-color: #111118;
+  color: #fff;
+}
+#laboratorios .card :is(h3, strong, dt),
+#alianzas .partner-card :is(h3, h3.partner-card__name) { color: #fff; }
+#laboratorios .card :is(p, dd, li),
+#alianzas .partner-card p { color: #D4D4DE; }
+#laboratorios .card a:not(.btn) { color: #fff; }
+/* Logos sobre fondo blanco para que se vean bien */
+#laboratorios .logo-strip,
+#alianzas .logo-strip {
+  align-self: flex-start;
+  padding: 8px 14px;
+  background: #fff;
+  border-radius: 12px;
+}
+#laboratorios .service-meta { background: #24243A; }
+#laboratorios .steps__num { background: #fff; color: #111118; }
+#laboratorios .card .btn-primary,
+#alianzas .partner-card .btn-primary { background: #fff; color: #111118; }
+#laboratorios .card .btn-primary:hover,
+#alianzas .partner-card .btn-primary:hover { background: #E6E6F0; }
+#laboratorios .card .btn-outline,
+#alianzas .partner-card .btn-outline { color: #fff; border-color: #fff; }
+#laboratorios .card .btn-outline:hover,
+#alianzas .partner-card .btn-outline:hover { background: rgba(255, 255, 255, 0.12); }
