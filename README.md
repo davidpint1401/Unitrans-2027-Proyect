@@ -222,10 +222,10 @@ Para actualizar precios o especialistas basta con editar el texto en `acompanami
 
 ### Cómo agregar a una persona especialista (por ejemplo, psicólogos nuevos)
 
-En `acompanamiento.html`, sección `#especialistas`, ya hay **dos fichas de psicología preparadas y ocultas** (llevan el atributo `hidden` y el comentario `PSICÓLOGO/A NUEVO/A`). Para publicar cada una:
+En `acompanamiento.html`, sección `#especialistas`, hay **dos fichas de psicología más preparadas y ocultas** (números 3 y 4) (llevan el atributo `hidden` y el comentario `PSICÓLOGO/A NUEVO/A`). Para publicar cada una:
 
 1. Cambia nombre, iniciales del avatar, rol, bio, modalidad, costo y teléfono. Lo que va dentro de `data-privado` (costos y contacto) solo se ve después del registro.
-2. Sube su foto a `assets/equipo/psicologia-1.jpg` (o `-2`). Si no hay foto, se ven las iniciales.
+2. Sube su foto a `assets/equipo/psicologia-3.jpg` (o `-4`), recortada en cuadrado con la cara centrada. Si no hay foto, se ven las iniciales.
 3. Borra el atributo `hidden` del `<article>`.
 4. Añade su nombre en la tarjeta **Psicología** de `acompanamiento.html` (sección `#servicios`) y de `index.html`; hay un comentario que marca el sitio.
 
