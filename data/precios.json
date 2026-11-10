@@ -1,11 +1,11 @@
 {
-  "actualizado": "2026-11-10T04:37:21.199Z",
+  "actualizado": "2026-11-10T18:40:01.685Z",
   "tasa": {
     "usd": 899.2705,
     "eur": 1006.60742688,
     "fecha_valor": null,
     "fuente": "bcv.org.ve",
-    "verificado": "2026-11-10T04:37:12.143Z",
+    "verificado": "2026-11-10T18:39:50.680Z",
     "estado": "ok"
   },
   "productos": {
@@ -46,7 +46,7 @@
         "bs": 16312,
         "origen": "json-ld",
         "estado": "ok",
-        "verificado": "2026-11-10T04:37:13.460Z"
+        "verificado": "2026-11-10T18:39:51.732Z"
       },
       "locatel": {
         "url": "https://www.locatel.com.ve/mesigyna_inyectable_11_cc/p",
@@ -58,7 +58,7 @@
         "bs": 15591.2,
         "origen": "vtex",
         "estado": "ok",
-        "verificado": "2026-11-10T04:37:15.606Z"
+        "verificado": "2026-11-10T18:39:54.165Z"
       }
     },
     "espironolactona": {
@@ -84,7 +84,7 @@
         "bs": 8242,
         "origen": "json-ld",
         "estado": "ok",
-        "verificado": "2026-11-10T04:37:16.548Z"
+        "verificado": "2026-11-10T18:39:55.638Z"
       },
       "locatel": {
         "url": "https://www.locatel.com.ve/siefried_espironolactona_25mg_x_30_tabletas/p",
@@ -96,7 +96,7 @@
         "bs": 8818.94,
         "origen": "vtex",
         "estado": "ok",
-        "verificado": "2026-11-10T04:37:18.516Z"
+        "verificado": "2026-11-10T18:39:57.427Z"
       }
     },
     "enanbolic": {
@@ -122,7 +122,7 @@
         "bs": 61180,
         "origen": "json-ld",
         "estado": "ok",
-        "verificado": "2026-11-10T04:37:19.511Z"
+        "verificado": "2026-11-10T18:39:59.470Z"
       },
       "suplementos": {
         "url": "https://suplementosvenezuela.com/products/enanbolic-10-amp",
@@ -134,7 +134,7 @@
         "bs": 95627.71,
         "origen": "json-ld",
         "estado": "ok",
-        "verificado": "2026-11-10T04:37:19.921Z"
+        "verificado": "2026-11-10T18:40:00.040Z"
       },
       "badan": {
         "url": "https://farmaciabadan.com/6972-testosterona-testosterona-enantato-250mg-ml-enanbolic",
@@ -172,7 +172,7 @@
         "bs": 77728,
         "origen": "json-ld",
         "estado": "ok",
-        "verificado": "2026-11-10T04:37:20.839Z"
+        "verificado": "2026-11-10T18:40:01.007Z"
       },
       "suplementos": {
         "url": "https://suplementosvenezuela.com/products/testobolic-nebido-undecanoate-testosterone-1-000mg",
@@ -184,7 +184,7 @@
         "bs": 110726.82,
         "origen": "json-ld",
         "estado": "ok",
-        "verificado": "2026-11-10T04:37:21.148Z"
+        "verificado": "2026-11-10T18:40:01.473Z"
       },
       "badan": {
         "url": "https://farmaciabadan.com/5784-testosterona-testostero-undecanoato-1g-4ml-testobolic",
