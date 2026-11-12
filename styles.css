@@ -897,3 +897,16 @@ html:not(.reg-locked) [data-candado] { display: none !important; }
 #alianzas .partner-card .btn-outline { color: #fff; border-color: #fff; }
 #laboratorios .card .btn-outline:hover,
 #alianzas .partner-card .btn-outline:hover { background: rgba(255, 255, 255, 0.12); }
+
+/* ---------- Especialista de vacaciones ---------- */
+.vacation-note {
+  display: flex; gap: 10px;
+  width: 100%;
+  padding: 12px 14px;
+  font-size: 0.9375rem;
+  color: var(--text) !important;
+  background: linear-gradient(135deg, #FFF3E0, #FFE7EC);
+  border-radius: 14px;
+}
+.vacation-note svg { width: 20px; height: 20px; flex-shrink: 0; margin-top: 2px; color: var(--logo-orange); }
+.vacation-note strong { display: block; font-family: var(--font-title); color: var(--text); }

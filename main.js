@@ -129,6 +129,19 @@
       .catch(function () { /* sin conexión o abierto como archivo local */ });
   }
 
+  /* ---------- Contenido con fecha (p. ej. vacaciones) ---------- */
+  // data-hasta="AAAA-MM-DD": se ve hasta ese día incluido y luego se quita.
+  // data-desde="AAAA-MM-DD": lleva hidden en el HTML y se muestra desde ese día.
+  // Las fechas son en hora de Venezuela, así que no hace falta volver a publicar la web.
+  var hoy = Date.now();
+  var dia = function (iso, hora) { return new Date(iso + 'T' + hora + '-04:00').getTime(); };
+  document.querySelectorAll('[data-hasta]').forEach(function (el) {
+    if (hoy > dia(el.getAttribute('data-hasta'), '23:59:59')) el.remove();
+  });
+  document.querySelectorAll('[data-desde]').forEach(function (el) {
+    if (hoy >= dia(el.getAttribute('data-desde'), '00:00:00')) el.hidden = false;
+  });
+
   /* ---------- Año actual en el footer ---------- */
   document.querySelectorAll('[data-year]').forEach(function (el) {
     el.textContent = new Date().getFullYear();
