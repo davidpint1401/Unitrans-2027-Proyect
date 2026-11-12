@@ -222,7 +222,7 @@ Para actualizar precios o especialistas basta con editar el texto en `acompanami
 
 ### Cómo agregar a una persona especialista (por ejemplo, psicólogos nuevos)
 
-En `acompanamiento.html`, sección `#especialistas`, hay **dos fichas de psicología más preparadas y ocultas** (números 3 y 4) (llevan el atributo `hidden` y el comentario `PSICÓLOGO/A NUEVO/A`). Para publicar cada una:
+En `acompanamiento.html`, sección `#especialistas`, para sumar más psicólogos copia una ficha de psicología existente (antes había fichas ocultas con el atributo `hidden` y el comentario `PSICÓLOGO/A NUEVO/A`). Para publicar cada una:
 
 1. Cambia nombre, iniciales del avatar, rol, bio, modalidad, costo y teléfono. Lo que va dentro de `data-privado` (costos y contacto) solo se ve después del registro.
 2. Sube su foto a `assets/equipo/psicologia-3.jpg` (o `-4`), recortada en cuadrado con la cara centrada. Si no hay foto, se ven las iniciales.
@@ -230,6 +230,15 @@ En `acompanamiento.html`, sección `#especialistas`, hay **dos fichas de psicolo
 4. Añade su nombre en la tarjeta **Psicología** de `acompanamiento.html` (sección `#servicios`) y de `index.html`; hay un comentario que marca el sitio.
 
 Para cualquier otra especialidad, copia una ficha `<article class="card profile">` existente y edítala igual.
+
+### Especialistas de vacaciones (contenido con fecha)
+
+`main.js` lee dos atributos con fechas en hora de Venezuela, así la web cambia sola sin volver a publicarla:
+
+- `data-hasta="AAAA-MM-DD"`: el elemento se ve hasta ese día incluido y después desaparece (por ejemplo, el aviso "De vacaciones").
+- `data-desde="AAAA-MM-DD"` + `hidden`: el elemento está oculto y aparece desde ese día (costos, contacto, nombre en las listas).
+
+Ejemplo: la ficha de Camila Khatcherian sale como "Coordinadora de Psicología Unitrans", de vacaciones y sin contacto hasta el 15 de enero de 2027, y desde el 16 vuelve a su ficha completa. Para otras vacaciones, copia esos atributos y cambia las fechas.
 
 ---
 
