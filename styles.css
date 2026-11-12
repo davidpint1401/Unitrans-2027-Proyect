@@ -473,6 +473,8 @@ a.card:hover { transform: translateY(-3px); box-shadow: var(--shadow); }
 .notice p + p { margin-top: 6px; }
 .notice--info { background: var(--bg-soft); border-color: var(--border); border-left-color: var(--brand-blue); }
 .notice--info svg { color: var(--brand-blue-dark); }
+.notice__actions { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 14px; }
+.notice--cirugia { margin-bottom: 32px; }
 
 /* ---------- 14. FAQ ---------- */
 .faq { display: grid; gap: 12px; max-width: 820px; }
