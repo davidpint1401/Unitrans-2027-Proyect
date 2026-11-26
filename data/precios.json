@@ -1,11 +1,11 @@
 {
-  "actualizado": "2026-11-25T20:28:18.849Z",
+  "actualizado": "2026-11-26T04:59:14.376Z",
   "tasa": {
-    "usd": 922.5637,
-    "eur": 1012.21844036,
+    "usd": 924.3534,
+    "eur": 1011.7325269,
     "fecha_valor": null,
     "fuente": "bcv.org.ve",
-    "verificado": "2026-11-25T20:27:48.836Z",
+    "verificado": "2026-11-26T04:59:10.796Z",
     "estado": "ok"
   },
   "productos": {
@@ -17,7 +17,7 @@
         "precio_origen": 6,
         "moneda_origen": "USD",
         "usd": 6,
-        "bs": 5535.38,
+        "bs": 5546.12,
         "origen": "referencia",
         "estado": "referencia",
         "verificado": null
@@ -31,7 +31,7 @@
         "precio_origen": 14.13,
         "moneda_origen": "USD",
         "usd": 14.13,
-        "bs": 13035.83,
+        "bs": 13061.11,
         "origen": "referencia",
         "estado": "referencia",
         "verificado": null
@@ -42,11 +42,11 @@
         "moneda_referencia": "USD",
         "precio_origen": 16696,
         "moneda_origen": "VES",
-        "usd": 18.1,
+        "usd": 18.06,
         "bs": 16696,
         "origen": "json-ld",
         "estado": "ok",
-        "verificado": "2026-11-25T20:27:49.671Z"
+        "verificado": "2026-11-26T04:59:11.384Z"
       },
       "locatel": {
         "url": "https://www.locatel.com.ve/mesigyna_inyectable_11_cc/p",
@@ -54,11 +54,11 @@
         "moneda_referencia": "USD",
         "precio_origen": 15591.2,
         "moneda_origen": "VES",
-        "usd": 16.9,
+        "usd": 16.87,
         "bs": 15591.2,
         "origen": "vtex",
         "estado": "ok",
-        "verificado": "2026-11-25T20:27:50.357Z"
+        "verificado": "2026-11-26T04:59:12.808Z"
       }
     },
     "espironolactona": {
@@ -69,7 +69,7 @@
         "precio_origen": 7.56,
         "moneda_origen": "USD",
         "usd": 7.56,
-        "bs": 6974.58,
+        "bs": 6988.11,
         "origen": "referencia",
         "estado": "referencia",
         "verificado": null
@@ -80,11 +80,11 @@
         "moneda_referencia": "USD",
         "precio_origen": 8418.5,
         "moneda_origen": "VES",
-        "usd": 9.13,
+        "usd": 9.11,
         "bs": 8418.5,
         "origen": "json-ld",
         "estado": "ok",
-        "verificado": "2026-11-25T20:27:51.252Z"
+        "verificado": "2026-11-26T04:59:13.213Z"
       },
       "locatel": {
         "url": "https://www.locatel.com.ve/siefried_espironolactona_25mg_x_30_tabletas/p",
@@ -92,11 +92,11 @@
         "moneda_referencia": "USD",
         "precio_origen": 6872.87,
         "moneda_origen": "VES",
-        "usd": 7.45,
+        "usd": 7.44,
         "bs": 6872.87,
         "origen": "vtex",
         "estado": "ok",
-        "verificado": "2026-11-25T20:28:16.322Z"
+        "verificado": "2026-11-26T04:59:13.276Z"
       }
     },
     "enanbolic": {
@@ -107,7 +107,7 @@
         "precio_origen": 85,
         "moneda_origen": "USD",
         "usd": 85,
-        "bs": 78417.91,
+        "bs": 78570.04,
         "origen": "referencia",
         "estado": "referencia",
         "verificado": null
@@ -118,11 +118,11 @@
         "moneda_referencia": "USD",
         "precio_origen": 61180,
         "moneda_origen": "VES",
-        "usd": 66.32,
+        "usd": 66.19,
         "bs": 61180,
         "origen": "json-ld",
         "estado": "ok",
-        "verificado": "2026-11-25T20:28:16.978Z"
+        "verificado": "2026-11-26T04:59:13.536Z"
       },
       "suplementos": {
         "url": "https://suplementosvenezuela.com/products/enanbolic-10-amp",
@@ -130,11 +130,11 @@
         "moneda_referencia": "EUR",
         "precio_origen": 95,
         "moneda_origen": "EUR",
-        "usd": 104.23,
-        "bs": 96160.75,
+        "usd": 103.98,
+        "bs": 96114.59,
         "origen": "json-ld",
         "estado": "ok",
-        "verificado": "2026-11-25T20:28:17.271Z"
+        "verificado": "2026-11-26T04:59:13.852Z"
       },
       "badan": {
         "url": "https://farmaciabadan.com/6972-testosterona-testosterona-enantato-250mg-ml-enanbolic",
@@ -143,7 +143,7 @@
         "precio_origen": 6.63,
         "moneda_origen": "USD",
         "usd": 6.63,
-        "bs": 6116.6,
+        "bs": 6128.46,
         "origen": "referencia",
         "estado": "referencia",
         "verificado": null
@@ -157,7 +157,7 @@
         "precio_origen": 103,
         "moneda_origen": "USD",
         "usd": 103,
-        "bs": 95024.06,
+        "bs": 95208.4,
         "origen": "referencia",
         "estado": "referencia",
         "verificado": null
@@ -168,11 +168,11 @@
         "moneda_referencia": "USD",
         "precio_origen": 77728,
         "moneda_origen": "VES",
-        "usd": 84.25,
+        "usd": 84.09,
         "bs": 77728,
         "origen": "json-ld",
         "estado": "ok",
-        "verificado": "2026-11-25T20:28:18.699Z"
+        "verificado": "2026-11-26T04:59:14.213Z"
       },
       "suplementos": {
         "url": "https://suplementosvenezuela.com/products/testobolic-nebido-undecanoate-testosterone-1-000mg",
@@ -180,11 +180,11 @@
         "moneda_referencia": "EUR",
         "precio_origen": 110,
         "moneda_origen": "EUR",
-        "usd": 120.69,
-        "bs": 111344.03,
+        "usd": 120.4,
+        "bs": 111290.58,
         "origen": "json-ld",
         "estado": "ok",
-        "verificado": "2026-11-25T20:28:18.811Z"
+        "verificado": "2026-11-26T04:59:14.342Z"
       },
       "badan": {
         "url": "https://farmaciabadan.com/5784-testosterona-testostero-undecanoato-1g-4ml-testobolic",
@@ -193,7 +193,7 @@
         "precio_origen": 85.8,
         "moneda_origen": "USD",
         "usd": 85.8,
-        "bs": 79155.97,
+        "bs": 79309.52,
         "origen": "referencia",
         "estado": "referencia",
         "verificado": null
